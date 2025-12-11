@@ -1,0 +1,3949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Connect Limited ID Generator - Ultra-Fast Speed Priority</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Montserrat:wght@700;800&display=swap');
+</style>
+
+<style>
+/* --- Interface Styling (Clean, Modern, and Compact) --- */
+:root{
+    /* Colors based on template analysis (LOCKED IN) */
+    --jcl-green: #007F4F; 
+    --jcl-dark-green: #005F3B; 
+    --text-dark: #1A1A1A;
+    --text-light: #555555;
+    --bg-white: #FFFFFF;
+    --bg-light: #F0F2F5; 
+    --border-subtle: #DEDEDE; 
+    --divider-grey: #5F5F5F; /* Locked-in Grey from template breakdown */
+    --shadow-subtle: 0 5px 15px rgba(0,0,0,.08); 
+    --shadow-card: 0 1px 4px rgba(0,0,0,.06);
+}
+/* Base Styles */
+body{
+    font-family:'Open Sans',sans-serif;
+    background-color:var(--bg-light);
+    color:var(--text-dark);
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    line-height: 1.5; 
+    font-size: 0.95em; 
+}
+header{
+    background-color:var(--bg-white);
+    padding:15px 30px; 
+    display:flex;
+    align-items:center;
+    border-bottom:4px solid var(--jcl-green);
+    box-shadow:0 3px 8px rgba(0,0,0,.04);
+}
+.header-logo{height:35px;margin-right:15px}
+h1{
+    margin:0;
+    font-size:1.5em; 
+    font-weight:800;
+    color:var(--jcl-dark-green);
+    font-family:'Montserrat',sans-serif;
+}
+
+/* Main Layout */
+main{
+    display:flex;
+    padding:30px; 
+    gap:30px;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    flex-grow:1;
+}
+#input-section{
+    flex:0 0 350px; 
+    background-color:var(--bg-white);
+    padding:25px; 
+    border-radius:10px;
+    box-shadow:var(--shadow-subtle);
+    position:sticky;
+    top:30px; 
+}
+#output-section{
+    flex:1; 
+    min-width:350px;
+    padding: 10px;
+}
+
+/* Input/Header Styling */
+h2{color:var(--jcl-green);font-size:1.4em;font-weight:700;margin-top:0;padding-bottom:12px;margin-bottom:20px;border-bottom:1px solid var(--border-subtle);}
+.input-step-header{font-weight:700;color:var(--jcl-dark-green);font-size:1.0em;margin-bottom:8px;padding: 10px 12px;background-color: rgba(0, 127, 79, 0.06);border-left: 4px solid var(--jcl-green);border-radius: 5px;font-family:'Montserrat',sans-serif;}
+.input-group{margin-bottom:20px;} 
+label{display:block;margin-bottom:6px;font-weight:700;font-size:0.95em;color:var(--text-dark);}
+input[type="file"], input[type="date"]{width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:6px;box-sizing:border-box;font-family:'Open Sans',sans-serif;font-size: 0.95em;}
+small{color:var(--text-light);font-size:.8em;}
+button{padding:12px 20px;border:none;border-radius:6px;cursor:pointer;font-size:0.95em;font-weight:700;margin-top:10px;margin-right:10px;box-shadow:0 2px 4px rgba(0,0,0,.1);font-family:'Montserrat',sans-serif;transition: background-color 0.2s, transform 0.2s;}
+button:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(0,0,0,.15);}
+#generateBatch{background-color:var(--jcl-green);color:var(--bg-white);}
+#generateBatch:hover{background-color:var(--jcl-dark-green);}
+#downloadPdf{background-color:#007BFF; color:var(--bg-white);display: none;}
+#downloadPng{background-color:#E91E63; color:var(--bg-white);display: none;}
+#downloadZip{background-color:#F58025; color:var(--bg-white);display: none;} 
+#button-container{margin-top:20px;padding-top:15px;border-top:1px solid var(--border-subtle);}
+#button-container h3{font-size: 1.1em;font-family: 'Montserrat', sans-serif;margin-top: 20px;margin-bottom: 5px;color: var(--text-dark);}
+
+
+/* Output Area */
+#output-section h2{border-bottom: none;padding-bottom: 0;margin-bottom: 5px;color: var(--text-dark);}
+#id-preview-output {
+    /* Vertical stacking and proper spacing for clarity */
+    display:flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    min-height:180px;
+    padding:15px;
+    background-color:var(--bg-white);
+    border-radius:10px;
+    box-shadow:inset 0 0 8px rgba(0,0,0,.04);
+}
+#output-section p{font-size: 0.9em;}
+
+
+/* --- ID PREVIEW CARD (Thumbnail) - MINIATURIZED, but using the exact structure --- */
+.id-card{
+    width: 350px; 
+    height: 120px; 
+    background-color: var(--bg-white);
+    border: 3px solid var(--divider-grey); 
+    border-radius: 15px; 
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; 
+    position: relative;
+    font-family:'Open Sans',sans-serif;
+    overflow: hidden;
+    font-size: 0.6em; 
+    box-shadow: var(--shadow-card);
+}
+.id-card .id-header{text-align:center;padding-top: 0;} 
+.id-card .id-logo{height: 15px; width: auto; margin-bottom: 2px;} 
+.id-card .id-header p{font-size:0.5em; margin: 0;}
+.id-card .id-title{
+    color:var(--jcl-green);font-family:'Montserrat',sans-serif;
+    font-size:0.9em;font-weight:700;margin:4px 0 1px 0;
+}
+.id-card .id-divider{width: 90%;height: 1px;background-color: var(--border-subtle);margin: 2px auto 6px auto;}
+.id-card .id-body{display:flex;gap:15px;padding-top:2px;margin-left: 5px; flex-grow: 1;}
+.id-card .photo-area{
+    width: 50px;height: 50px;border: 2px solid var(--text-dark);
+    border-radius: 6px; 
+}
+.id-card .info-area{flex: 1;}
+.id-card .info-area h4{font-size:1.0em;margin:0 0 1px 0;font-weight:700;color:var(--text-dark);}
+.id-card .info-area .position-text{color:var(--jcl-green);font-weight:600;margin:0 0 1px 0; font-size:.85em;}
+.id-card .info-area .id-number-text{color:var(--text-dark);font-weight:400;margin:0 0 4px 0; font-size:.75em;}
+.id-card .date-row{margin:1px 0;font-size:.75em;color: var(--jcl-green); line-height: 1.1;}
+.id-card .date-label{font-weight:700;}
+.id-card .date-value{font-weight:400;color:var(--text-dark);margin-left: 3px;}
+
+.id-card .signature-area{
+    position: absolute;bottom: 5px; right: 10px;display:flex;
+    align-items: flex-end;text-align: right;
+}
+.id-card .signature-label{
+    font-size:.75em; color:var(--jcl-green);font-weight:600; 
+    margin-right: 5px;margin-bottom: -3px;
+}
+.id-card .issuer-signature{max-height:10px;max-width:35px;}
+
+
+/* --- HIDDEN TEMPLATE STYLE (PIXEL-PERFECT TECHNICAL SPEC) - LOCKED IN DESIGN --- */
+#id-card-template {
+    position: absolute; left: -5000px; top: -5000px;
+    /* 1. GENERAL CARD DIMENSIONS */
+    width: 856px; height: 540px; 
+    box-sizing: border-box;
+    /* 2. OUTER BORDER */
+    padding: 25px; /* Inner Content Margin: 25 px */
+    background-color: var(--bg-white);
+    border: 8px solid var(--divider-grey); /* Border Thickness: 8px, Color: #5F5F5F */
+    border-radius: 30px; /* Corner Radius: 30 px */
+    font-family:'Open Sans',sans-serif; font-size: 1em; 
+    display: flex; flex-direction: column; overflow: hidden; 
+}
+/* 3. TOP SECTION (LOGO AREA) */
+#id-card-template .id-header {text-align: center;padding-top: 5px;margin-bottom: 0;}
+#id-card-template .id-logo {height: 65px;width: 190px;margin-bottom: 20px;} 
+#id-card-template .id-header p {font-size: 24px;font-weight: 300;margin-top: -15px;} 
+
+/* 4. TITLE BAR */
+#id-card-template .id-title {
+    color: var(--jcl-green); 
+    font-family:'Montserrat',sans-serif; 
+    font-size: 36px; 
+    font-weight: 700; 
+    margin: 0 auto;
+}
+#id-card-template .id-divider{
+    width: 90%;
+    height: 2px; 
+    background-color: var(--divider-grey); 
+    margin: 20px auto 30px auto; 
+}
+
+/* 5. MAIN CONTENT AREA (2-COLUMN LAYOUT) */
+#id-card-template .id-body {display: flex;gap: 50px;padding-top: 0;flex-grow: 1; margin-left: 30px;} 
+/* Left Column — Photo Frame */
+#id-card-template .photo-area {
+    width: 260px; height: 260px; 
+    border: 4px solid var(--text-dark); 
+    border-radius: 20px; 
+}
+/* Right Column — Staff Information */
+#id-card-template .info-area h4 {font-size: 36px;margin: 0 0 0px 0;font-weight: 700; color: #000000;} 
+#id-card-template .info-area .position-text {font-size: 30px;margin: 0 0 10px 0;font-weight: 600;color: var(--jcl-green);} 
+#id-card-template .info-area .id-number-text {font-size: 28px;margin: 0 0 15px 0;font-weight: 400;color: var(--text-dark);} 
+
+/* 6. DATES SECTION */
+#id-card-template .date-row {
+    margin: 10px 0; 
+    font-size: 30px; 
+    font-weight: 700; 
+    color: var(--jcl-green);
+    line-height: 1.2;
+}
+#id-card-template .date-row .date-value {
+    font-weight: 400;
+    color: var(--text-dark); 
+    margin-left: 15px; 
+}
+
+/* 7. SIGNATURE AREA */
+#id-card-template .signature-area {
+    position: absolute; bottom: 20px; right: 30px; 
+    display: flex; align-items: flex-end; text-align: right; flex-direction: row; padding: 0;
+}
+#id-card-template .signature-label {
+    font-size: 30px; 
+    color: var(--jcl-green); 
+    font-weight: 600; 
+    margin-right: 15px;
+    margin-bottom: -10px; 
+}
+#id-card-template .issuer-signature {
+    max-height: 80px; 
+    max-width: 160px; 
+}
+
+
+/* Loading Overlay & Footer */
+#loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:1000}
+.spinner{border:8px solid #f3f3f3;border-top:8px solid var(--jcl-green);border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;margin-bottom:20px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+footer{text-align:center;padding:12px;background-color:var(--bg-white);color:var(--text-light);border-top:1px solid var(--border-subtle);margin-top:auto;font-size:.85em}
+footer a{color:var(--jcl-green);text-decoration:none;font-weight:700}
+</style>
+
+</head>
+<body>
+<div id="loading-overlay">
+<div class="spinner"></div>
+<p style="font-size: 1.1em; color: var(--jcl-green); font-weight: 500;">Rendering for maximum speed. Please wait just a moment...</p>
+</div>
+
+<header>
+    <img src="jcl_logo.png" alt="Job Connect Limited Logo" class="header-logo">
+    <h1>Job Connect Limited ID Generator</h1>
+</header>
+
+<main>
+<section id="input-section">
+<h2>🚀 Card Generation Workflow</h2>
+
+<p class="input-step-header">1. Load Staff Records</p>
+<div class="input-group">
+<label for="csvFileUpload">Staff Data File (CSV):</label>
+<input type="file" id="csvFileUpload" accept=".csv, .xlsx">
+<small>Use a clean CSV list for rapid processing.</small>
+</div>
+
+<p class="input-step-header">2. Add Visual Assets</p>
+<div class="input-group">
+<label for="employeePhotosUpload">Employee Photos (Batch):</label>
+<input type="file" id="employeePhotosUpload" accept="image/*" multiple>
+<small>Filenames must match your data list for correct assignment.</small>
+</div>
+
+<p class="input-step-header">3. Define Authorization</p>
+<div class="input-group">
+<label for="issuerSignatureUpload">Authorizing Signature:</label>
+<input type="file" id="issuerSignatureUpload" accept="image/*">
+</div>
+
+<div class="input-group" style="display: flex; gap: 15px;">
+<div style="flex: 1;">
+<label for="dateOfIssue">Date of Issue:</label>
+<input type="date" id="dateOfIssue">
+</div>
+<div style="flex: 1;">
+<label for="dateOfExpiry">Date of Expiry:</label>
+<input type="date" id="dateOfExpiry">
+</div>
+</div>
+
+<div id="button-container">
+<button id="generateBatch">✨ Generate All Previews (Instant)</button>
+<h3 style="margin-top: 20px;">Download Options:</h3>
+<button id="downloadPdf">Download Batch PDF</button>
+<button id="downloadPng">Download Individual PNG Images</button>
+<button id="downloadZip">Download ZIP Archive</button>
+</div>
+</section>
+
+<section id="output-section">
+<h2>Visual Verification</h2>
+<p style="color: var(--jcl-dark-green); margin-bottom: 15px; font-style: italic;">Verify the clean, precise template layout below before batch exporting. Previews are **vertically stacked** for clarity.</p>
+<div id="id-preview-output">
+<p style="padding: 20px; color: var(--text-light);">Upload your data and click "Generate" above to see the clean, organized ID previews here.</p>
+</div>
+</section>
+</main>
+
+<div id="id-card-template">
+<div class="id-header">
+    <div class="logo-container">
+        <img src="jcl_logo.png" alt="Logo" class="id-logo">
+        <p style="font-family: 'Open Sans', sans-serif; font-weight: 300;">Manpower & Logistics</p>
+    </div>
+    <div class="id-title">STAFF IDENTIFICATION CARD</div>
+    <div class="id-divider"></div>
+</div>
+<div class="id-body">
+    <div class="photo-area"><img class="staff-photo" src="" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;"></div>
+    <div class="info-area">
+        <h4></h4>
+        <p class="position-text"></p>
+        <p class="id-number-text"></p>
+        <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value"></span></div>
+        <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value"></span></div>
+    </div>
+</div>
+<div class="signature-area">
+    <span class="signature-label">Authorizing Signature;</span>
+    <img class="issuer-signature" src="" alt="Issuer Signature">
+</div>
+</div>
+
+<footer>
+Developed by <a href="https://www.linkedin.com/in/abdulfatah-katwesigye-b125a0225/" target="_blank">Abdulfatah Katwesigye</a> at Job Connect Limited
+</footer>
+
+<script>
+let staffData=[];let photoMap=new Map();let signatureDataURL='';
+// *** ULTRA-FAST RENDERING SETTING: MINIMAL SCALE FOR MAXIMUM SPEED ***
+const CARD_RENDER_SCALE = 0.25; 
+
+const formatDate=d=>{if(!d)return'date';const date=new Date(d+'T00:00:00');return date.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'})};
+function toggleLoading(s,m=""){const o=document.getElementById('loading-overlay');if(s){o.style.display='flex';o.querySelector('p:first-of-type').textContent=m||"Rendering for maximum speed. Please wait just a moment..."}else{o.style.display='none'}}
+
+const csvToArray=(str,d=",")=>{
+    const normalizedStr = str.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const lines = normalizedStr.split('\n').filter(line => line.trim() !== '');
+    if(lines.length===0)return[];
+    const headers = lines[0].split(d).map(h=>h.trim().toUpperCase());
+    const dataRows = lines.slice(1);
+    const array = dataRows.map(row=>{
+        const values = row.split(d).map(v=>v.trim());
+        if(values.length!==headers.length) {
+            console.warn("Skipping row due to incorrect column count:", row);
+            return null;
+        }
+        const el = headers.reduce((o,h,i)=>{o[h]=values[i];return o},{})
+        if((!el['NAME'] || el['NAME'].trim()==='') && (!el['ID NUMBER'] || el['ID NUMBER'].trim()==='')) {
+            return null;
+        }
+        return el;
+    }).filter(e=>e!==null);
+    return array;
+};
+
+function handleCsvUpload(e){const f=e.target.files[0];if(f){if(f.name.toLowerCase().endsWith('.xlsx'))alert("You have selected an Excel file (.xlsx). The system requires this file to be saved as a **CSV (Comma Separated Values)** file first. Please convert and re-upload the CSV version.");
+const r=new FileReader();r.onload=e=>{staffData=csvToArray(e.target.result);checkStatus();alert(`${staffData.length} staff records loaded from data file (expecting CSV format).`)};r.readAsText(f)}}
+function handlePhotosUpload(e){const f=e.target.files;photoMap.clear();for(const file of f){const r=new FileReader();r.onload=e=>{photoMap.set(file.name,e.target.result);checkStatus()};r.readAsDataURL(file)}alert(`${f.length} photos loaded.`)}
+function handleSignatureUpload(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=e=>{signatureDataURL=e.target.result;checkStatus()};r.readAsDataURL(f)}}
+
+// Debug function to check if critical assets are loaded
+function checkStatus() {
+    let statusMessage = "Generator Status: Ready.";
+    if (staffData.length === 0) {
+        statusMessage = "Generator Status: Waiting for Staff Data (CSV).";
+    } else if (signatureDataURL === '') {
+        statusMessage = "Generator Status: Waiting for Authorizing Signature.";
+    } else if (photoMap.size === 0) {
+        statusMessage = `Generator Status: Loaded ${staffData.length} records, but no Employee Photos loaded.`;
+    }
+    console.log(statusMessage);
+}
+
+
+// Function to populate ALL visual preview cards (at thumbnail size)
+function generatePreview(){
+    toggleLoading(true,"Preparing data and generating all card previews...");
+    
+    document.getElementById('downloadPdf').style.display='none';
+    document.getElementById('downloadZip').style.display='none';
+    document.getElementById('downloadPng').style.display='none';
+
+    // *** INSTANT PREVIEW RENDERING ***
+    setTimeout(()=>{
+        const outputDiv=document.getElementById('id-preview-output');
+        outputDiv.innerHTML = ''; 
+
+        if(staffData.length===0){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the CSV staff data first.</p>';toggleLoading(false);return}
+        if(signatureDataURL===''){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the Authorizing Signature first.</p>';toggleLoading(false);return}
+        
+        const iD=document.getElementById('dateOfIssue').value;
+        const eD=document.getElementById('dateOfExpiry').value;
+        
+        staffData.forEach((s) => {
+            const staffName = s['NAME'] || 'STAFF NAME MISSING';
+            const position = s['POSITION'] || 'POSITION MISSING';
+            const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+            const photoFile = s['PHOTO FILENAME'];
+
+            // Use simple placeholder SVG for speed if photo not found
+            const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">NO PHOTO</text></svg>`;
+            
+            const c=document.createElement('div');
+            c.className='id-card';
+            c.setAttribute('data-id',idNumber);
+            
+            // Replicating the miniaturized template structure (LOCKED IN)
+            c.innerHTML=`
+            <div class="id-header">
+                <div class="logo-container">
+                    <img src="jcl_logo.png" alt="Logo" class="id-logo">
+                    <p>M & L</p>
+                </div>
+                <div class="id-title">STAFF ID CARD</div>
+                <div class="id-divider"></div>
+            </div>
+            <div class="id-body">
+                <div class="photo-area"><img class="staff-photo" src="${pS}" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;"></div>
+                <div class="info-area">
+                    <h4>${staffName.toUpperCase()}</h4>
+                    <p class="position-text">${position.toUpperCase()}</p>
+                    <p class="id-number-text">${idNumber.toUpperCase()}</p>
+                    <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value">${formatDate(iD)}</span></div>
+                    <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value">${formatDate(eD)}</span></div>
+                </div>
+            </div>
+            <div class="signature-area">
+                <span class="signature-label">Authorizing Signature;</span>
+                <img class="issuer-signature" src="${signatureDataURL}" alt="Issuer Signature">
+            </div>`;
+            
+            outputDiv.appendChild(c);
+        });
+        
+        if (staffData.length > 0) {
+            document.getElementById('downloadPdf').style.display='inline-block';
+            document.getElementById('downloadPng').style.display='inline-block';
+            document.getElementById('downloadZip').style.display='inline-block';
+        }
+
+        toggleLoading(false);
+    },50);
+}
+
+// Function to render card to canvas (used for downloads)
+async function renderCardToCanvas(s, iD, eD) {
+    const template = document.getElementById('id-card-template');
+    
+    const staffName = s['NAME'] || 'STAFF NAME MISSING';
+    const position = s['POSITION'] || 'POSITION MISSING';
+    const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+    const photoFile = s['PHOTO FILENAME'];
+
+    const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">PHOTO MISSING</text></svg>`;
+    
+    // Populate the HD template elements
+    template.querySelector('h4').textContent = staffName.toUpperCase();
+    template.querySelector('.position-text').textContent = position.toUpperCase();
+    template.querySelector('.id-number-text').textContent = idNumber.toUpperCase();
+    
+    const dateRows = template.querySelectorAll('.date-row');
+    dateRows[0].querySelector('.date-value').textContent = formatDate(iD); 
+    dateRows[1].querySelector('.date-value').textContent = formatDate(eD); 
+
+    template.querySelector('.staff-photo').src = pS;
+    template.querySelector('.issuer-signature').src = signatureDataURL;
+    
+    template.setAttribute('data-id', idNumber);
+
+    // ** ULTRA-FAST RENDERING SETTINGS (LOCKED IN SPEED PRIORITY) **
+    const canvas = await html2canvas(template, {
+        scale: CARD_RENDER_SCALE, 
+        backgroundColor: '#FFFFFF',
+        useCORS: true,
+        logging: false, 
+        imageTimeout: 0, 
+    });
+    
+    return canvas.toDataURL('image/png');
+}
+
+// >>>>>> PDF Generation (LOCKED IN) <<<<<<
+async function downloadPdf(){
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+    
+    const {jsPDF} = window.jspdf;
+    const d = new jsPDF('l','mm','a4',false); 
+    d.setProperties({title:'Job Connect ID Batch Print',author:'ID Generator'});
+    
+    // PDF Metrics for 3x3 layout (9 cards per page)
+    const pW=297; const pH=210; 
+    const tIW=85.6; const tIH=54; 
+    const numCols=3; const numRows=3; 
+    const mX=(pW-(numCols*tIW))/(numCols+1); 
+    const mY=(pH-(numRows*tIH))/(numRows+1);
+    
+    let x=mX; let y=mY; let cOP=0;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    const totalCards = staffData.length;
+    toggleLoading(true, `Starting ultra-fast PDF render of ${totalCards} cards...`);
+    const startTime = Date.now();
+
+    for(let i=0; i < totalCards; i++){
+        const staff = staffData[i];
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering card ${i + 1} of ${totalCards} for PDF (Ultra-Fast Mode)...`;
+
+        const imageData = await renderCardToCanvas(staff, iD, eD);
+
+        if(cOP === 9){ 
+            d.addPage('a4','l');
+            cOP=0
+        } 
+        
+        const col = cOP % numCols; 
+        const row = Math.floor(cOP / numCols);
+        
+        x = mX + (col * (tIW + mX));
+        y = mY + (row * (tIH + mY));
+        
+        d.addImage(imageData,'PNG',x,y,tIW,tIH,`card-${i}`);
+        cOP++;
+    }
+    
+    d.save('JobConnect_ID_Batch_Print.pdf');
+    const duration = (Date.now() - startTime) / 1000;
+    
+    toggleLoading(false);
+    alert(`PDF generation complete! Total time: ${duration.toFixed(2)}s.`);
+}
+
+// >>>>>> DIRECT PNG Generation (LOCKED IN) <<<<<<
+async function downloadIndividualPngs() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast PNG export of ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        // Use FileSaver.js to trigger direct download
+        const blob = await fetch(dataURL).then(res => res.blob());
+        saveAs(blob, `${cardName}_ID_${cardId}.png`);
+    }
+
+    const duration = (Date.now() - startTime) / 1000;
+    toggleLoading(false);
+    alert(`Individual PNG export complete! Total time: ${duration.toFixed(2)}s. Downloads should have started for all ${totalCards} images.`);
+}
+
+
+// >>>>>> ZIP Generation (LOCKED IN) <<<<<<
+async function downloadZip() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const zip = new JSZip();
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast ZIP archive preparation for ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        const base64Data = dataURL.split(',')[1];
+        
+        zip.file(`${cardName}_ID_${cardId}.png`, base64Data, { base64: true });
+    }
+
+    document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+        `Compressing files into ZIP...`;
+
+    zip.generateAsync({ type: "blob" })
+        .then(function (content) {
+            saveAs(content, "JobConnect_Individual_ID_Cards.zip");
+            const duration = (Date.now() - startTime) / 1000;
+            toggleLoading(false);
+            alert(`ZIP file generation complete! Total time: ${duration.toFixed(2)}s.`);
+        })
+        .catch(err => {
+            console.error(err);
+            toggleLoading(false);
+            alert("Error generating ZIP file.");
+        });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    // Run an initial status check
+    checkStatus(); 
+
+    document.getElementById('csvFileUpload').addEventListener('change',handleCsvUpload);
+    document.getElementById('employeePhotosUpload').addEventListener('change',handlePhotosUpload);
+    document.getElementById('issuerSignatureUpload').addEventListener('change',handleSignatureUpload);
+    document.getElementById('generateBatch').addEventListener('click',generatePreview); 
+    document.getElementById('downloadPdf').addEventListener('click',downloadPdf);
+    document.getElementById('downloadZip').addEventListener('click',downloadZip);
+    document.getElementById('downloadPng').addEventListener('click',downloadIndividualPngs);
+
+    // Initially hide the download buttons
+    document.getElementById('downloadPdf').style.display = 'none';
+    document.getElementById('downloadPng').style.display = 'none';
+    document.getElementById('downloadZip').style.display = 'none';
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Connect Limited ID Generator - Ultra-Fast Speed Priority</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Montserrat:wght@700;800&display=swap');
+</style>
+
+<style>
+/* --- Interface Styling (Clean, Modern, and Compact) --- */
+:root{
+    /* Colors based on template analysis (LOCKED IN) */
+    --jcl-green: #007F4F; 
+    --jcl-dark-green: #005F3B; 
+    --text-dark: #1A1A1A;
+    --text-light: #555555;
+    --bg-white: #FFFFFF;
+    --bg-light: #F0F2F5; 
+    --border-subtle: #DEDEDE; 
+    --divider-grey: #5F5F5F; /* Locked-in Grey from template breakdown */
+    --shadow-subtle: 0 5px 15px rgba(0,0,0,.08); 
+    --shadow-card: 0 1px 4px rgba(0,0,0,.06);
+}
+/* Base Styles */
+body{
+    font-family:'Open Sans',sans-serif;
+    background-color:var(--bg-light);
+    color:var(--text-dark);
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    line-height: 1.5; 
+    font-size: 0.95em; 
+}
+header{
+    background-color:var(--bg-white);
+    padding:15px 30px; 
+    display:flex;
+    align-items:center;
+    border-bottom:4px solid var(--jcl-green);
+    box-shadow:0 3px 8px rgba(0,0,0,.04);
+}
+.header-logo{height:35px;margin-right:15px}
+h1{
+    margin:0;
+    font-size:1.5em; 
+    font-weight:800;
+    color:var(--jcl-dark-green);
+    font-family:'Montserrat',sans-serif;
+}
+
+/* Main Layout */
+main{
+    display:flex;
+    padding:30px; 
+    gap:30px;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    flex-grow:1;
+}
+#input-section{
+    flex:0 0 350px; 
+    background-color:var(--bg-white);
+    padding:25px; 
+    border-radius:10px;
+    box-shadow:var(--shadow-subtle);
+    position:sticky;
+    top:30px; 
+}
+#output-section{
+    flex:1; 
+    min-width:350px;
+    padding: 10px;
+}
+
+/* Input/Header Styling */
+h2{color:var(--jcl-green);font-size:1.4em;font-weight:700;margin-top:0;padding-bottom:12px;margin-bottom:20px;border-bottom:1px solid var(--border-subtle);}
+.input-step-header{font-weight:700;color:var(--jcl-dark-green);font-size:1.0em;margin-bottom:8px;padding: 10px 12px;background-color: rgba(0, 127, 79, 0.06);border-left: 4px solid var(--jcl-green);border-radius: 5px;font-family:'Montserrat',sans-serif;}
+.input-group{margin-bottom:20px;} 
+label{display:block;margin-bottom:6px;font-weight:700;font-size:0.95em;color:var(--text-dark);}
+input[type="file"], input[type="date"]{width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:6px;box-sizing:border-box;font-family:'Open Sans',sans-serif;font-size: 0.95em;}
+small{color:var(--text-light);font-size:.8em;}
+button{padding:12px 20px;border:none;border-radius:6px;cursor:pointer;font-size:0.95em;font-weight:700;margin-top:10px;margin-right:10px;box-shadow:0 2px 4px rgba(0,0,0,.1);font-family:'Montserrat',sans-serif;transition: background-color 0.2s, transform 0.2s;}
+button:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(0,0,0,.15);}
+#generateBatch{background-color:var(--jcl-green);color:var(--bg-white);}
+#generateBatch:hover{background-color:var(--jcl-dark-green);}
+#downloadPdf{background-color:#007BFF; color:var(--bg-white);display: none;}
+#downloadPng{background-color:#E91E63; color:var(--bg-white);display: none;}
+#downloadZip{background-color:#F58025; color:var(--bg-white);display: none;} 
+#button-container{margin-top:20px;padding-top:15px;border-top:1px solid var(--border-subtle);}
+#button-container h3{font-size: 1.1em;font-family: 'Montserrat', sans-serif;margin-top: 20px;margin-bottom: 5px;color: var(--text-dark);}
+
+
+/* Output Area */
+#output-section h2{border-bottom: none;padding-bottom: 0;margin-bottom: 5px;color: var(--text-dark);}
+#id-preview-output {
+    /* Vertical stacking and proper spacing for clarity */
+    display:flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    min-height:180px;
+    padding:15px;
+    background-color:var(--bg-white);
+    border-radius:10px;
+    box-shadow:inset 0 0 8px rgba(0,0,0,.04);
+}
+#output-section p{font-size: 0.9em;}
+
+
+/* --- ID PREVIEW CARD (Thumbnail) - MINIATURIZED, but using the exact structure --- */
+.id-card{
+    width: 350px; 
+    height: 120px; 
+    background-color: var(--bg-white);
+    border: 3px solid var(--divider-grey); 
+    border-radius: 15px; 
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; 
+    position: relative;
+    font-family:'Open Sans',sans-serif;
+    overflow: hidden;
+    font-size: 0.6em; 
+    box-shadow: var(--shadow-card);
+}
+.id-card .id-header{text-align:center;padding-top: 0;} 
+.id-card .id-logo{height: 15px; width: auto; margin-bottom: 2px;} 
+.id-card .id-header p{font-size:0.5em; margin: 0;}
+.id-card .id-title{
+    color:var(--jcl-green);font-family:'Montserrat',sans-serif;
+    font-size:0.9em;font-weight:700;margin:4px 0 1px 0;
+}
+.id-card .id-divider{width: 90%;height: 1px;background-color: var(--border-subtle);margin: 2px auto 6px auto;}
+.id-card .id-body{display:flex;gap:15px;padding-top:2px;margin-left: 5px; flex-grow: 1;}
+.id-card .photo-area{
+    width: 50px;height: 50px;border: 2px solid var(--text-dark);
+    border-radius: 6px; 
+}
+.id-card .info-area{flex: 1;}
+.id-card .info-area h4{font-size:1.0em;margin:0 0 1px 0;font-weight:700;color:var(--text-dark);}
+.id-card .info-area .position-text{color:var(--jcl-green);font-weight:600;margin:0 0 1px 0; font-size:.85em;}
+.id-card .info-area .id-number-text{color:var(--text-dark);font-weight:400;margin:0 0 4px 0; font-size:.75em;}
+.id-card .date-row{margin:1px 0;font-size:.75em;color: var(--jcl-green); line-height: 1.1;}
+.id-card .date-label{font-weight:700;}
+.id-card .date-value{font-weight:400;color:var(--text-dark);margin-left: 3px;}
+
+.id-card .signature-area{
+    position: absolute;bottom: 5px; right: 10px;display:flex;
+    align-items: flex-end;text-align: right;
+}
+.id-card .signature-label{
+    font-size:.75em; color:var(--jcl-green);font-weight:600; 
+    margin-right: 5px;margin-bottom: -3px;
+}
+.id-card .issuer-signature{max-height:10px;max-width:35px;}
+
+
+/* --- HIDDEN TEMPLATE STYLE (PIXEL-PERFECT TECHNICAL SPEC) - LOCKED IN DESIGN --- */
+#id-card-template {
+    position: absolute; left: -5000px; top: -5000px;
+    /* 1. GENERAL CARD DIMENSIONS */
+    width: 856px; height: 540px; 
+    box-sizing: border-box;
+    /* 2. OUTER BORDER */
+    padding: 25px; /* Inner Content Margin: 25 px */
+    background-color: var(--bg-white);
+    border: 8px solid var(--divider-grey); /* Border Thickness: 8px, Color: #5F5F5F */
+    border-radius: 30px; /* Corner Radius: 30 px */
+    font-family:'Open Sans',sans-serif; font-size: 1em; 
+    display: flex; flex-direction: column; overflow: hidden; 
+}
+/* 3. TOP SECTION (LOGO AREA) */
+#id-card-template .id-header {text-align: center;padding-top: 5px;margin-bottom: 0;}
+#id-card-template .id-logo {height: 65px;width: 190px;margin-bottom: 20px;} 
+#id-card-template .id-header p {font-size: 24px;font-weight: 300;margin-top: -15px;} 
+
+/* 4. TITLE BAR */
+#id-card-template .id-title {
+    color: var(--jcl-green); 
+    font-family:'Montserrat',sans-serif; 
+    font-size: 36px; 
+    font-weight: 700; 
+    margin: 0 auto;
+}
+#id-card-template .id-divider{
+    width: 90%;
+    height: 2px; 
+    background-color: var(--divider-grey); 
+    margin: 20px auto 30px auto; 
+}
+
+/* 5. MAIN CONTENT AREA (2-COLUMN LAYOUT) */
+#id-card-template .id-body {display: flex;gap: 50px;padding-top: 0;flex-grow: 1; margin-left: 30px;} 
+/* Left Column — Photo Frame */
+#id-card-template .photo-area {
+    width: 260px; height: 260px; 
+    border: 4px solid var(--text-dark); 
+    border-radius: 20px; 
+}
+/* Right Column — Staff Information */
+#id-card-template .info-area h4 {font-size: 36px;margin: 0 0 0px 0;font-weight: 700; color: #000000;} 
+#id-card-template .info-area .position-text {font-size: 30px;margin: 0 0 10px 0;font-weight: 600;color: var(--jcl-green);} 
+#id-card-template .info-area .id-number-text {font-size: 28px;margin: 0 0 15px 0;font-weight: 400;color: var(--text-dark);} 
+
+/* 6. DATES SECTION */
+#id-card-template .date-row {
+    margin: 10px 0; 
+    font-size: 30px; 
+    font-weight: 700; 
+    color: var(--jcl-green);
+    line-height: 1.2;
+}
+#id-card-template .date-row .date-value {
+    font-weight: 400;
+    color: var(--text-dark); 
+    margin-left: 15px; 
+}
+
+/* 7. SIGNATURE AREA */
+#id-card-template .signature-area {
+    position: absolute; bottom: 20px; right: 30px; 
+    display: flex; align-items: flex-end; text-align: right; flex-direction: row; padding: 0;
+}
+#id-card-template .signature-label {
+    font-size: 30px; 
+    color: var(--jcl-green); 
+    font-weight: 600; 
+    margin-right: 15px;
+    margin-bottom: -10px; 
+}
+#id-card-template .issuer-signature {
+    max-height: 80px; 
+    max-width: 160px; 
+}
+
+
+/* Loading Overlay & Footer */
+#loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:1000}
+.spinner{border:8px solid #f3f3f3;border-top:8px solid var(--jcl-green);border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;margin-bottom:20px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+footer{text-align:center;padding:12px;background-color:var(--bg-white);color:var(--text-light);border-top:1px solid var(--border-subtle);margin-top:auto;font-size:.85em}
+footer a{color:var(--jcl-green);text-decoration:none;font-weight:700}
+</style>
+
+</head>
+<body>
+<div id="loading-overlay">
+<div class="spinner"></div>
+<p style="font-size: 1.1em; color: var(--jcl-green); font-weight: 500;">Rendering for maximum speed. Please wait just a moment...</p>
+</div>
+
+<header>
+    <img src="jcl_logo.png" alt="Job Connect Limited Logo" class="header-logo">
+    <h1>Job Connect Limited ID Generator</h1>
+</header>
+
+<main>
+<section id="input-section">
+<h2>🚀 Card Generation Workflow</h2>
+
+<p class="input-step-header">1. Load Staff Records</p>
+<div class="input-group">
+<label for="csvFileUpload">Staff Data File (CSV):</label>
+<input type="file" id="csvFileUpload" accept=".csv, .xlsx">
+<small>Use a clean CSV list for rapid processing.</small>
+</div>
+
+<p class="input-step-header">2. Add Visual Assets</p>
+<div class="input-group">
+<label for="employeePhotosUpload">Employee Photos (Batch):</label>
+<input type="file" id="employeePhotosUpload" accept="image/*" multiple>
+<small>Filenames must match your data list for correct assignment.</small>
+</div>
+
+<p class="input-step-header">3. Define Authorization</p>
+<div class="input-group">
+<label for="issuerSignatureUpload">Authorizing Signature:</label>
+<input type="file" id="issuerSignatureUpload" accept="image/*">
+</div>
+
+<div class="input-group" style="display: flex; gap: 15px;">
+<div style="flex: 1;">
+<label for="dateOfIssue">Date of Issue:</label>
+<input type="date" id="dateOfIssue">
+</div>
+<div style="flex: 1;">
+<label for="dateOfExpiry">Date of Expiry:</label>
+<input type="date" id="dateOfExpiry">
+</div>
+</div>
+
+<div id="button-container">
+<button id="generateBatch">✨ Generate All Previews (Instant)</button>
+<h3 style="margin-top: 20px;">Download Options:</h3>
+<button id="downloadPdf">Download Batch PDF</button>
+<button id="downloadPng">Download Individual PNG Images</button>
+<button id="downloadZip">Download ZIP Archive</button>
+</div>
+</section>
+
+<section id="output-section">
+<h2>Visual Verification</h2>
+<p style="color: var(--jcl-dark-green); margin-bottom: 15px; font-style: italic;">Verify the clean, precise template layout below before batch exporting. Previews are **vertically stacked** for clarity.</p>
+<div id="id-preview-output">
+<p style="padding: 20px; color: var(--text-light);">Upload your data and click "Generate" above to see the clean, organized ID previews here.</p>
+</div>
+</section>
+</main>
+
+<div id="id-card-template">
+<div class="id-header">
+    <div class="logo-container">
+        <img src="jcl_logo.png" alt="Logo" class="id-logo">
+        <p style="font-family: 'Open Sans', sans-serif; font-weight: 300;">Manpower & Logistics</p>
+    </div>
+    <div class="id-title">STAFF IDENTIFICATION CARD</div>
+    <div class="id-divider"></div>
+</div>
+<div class="id-body">
+    <div class="photo-area"><img class="staff-photo" src="" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;"></div>
+    <div class="info-area">
+        <h4></h4>
+        <p class="position-text"></p>
+        <p class="id-number-text"></p>
+        <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value"></span></div>
+        <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value"></span></div>
+    </div>
+</div>
+<div class="signature-area">
+    <span class="signature-label">Authorizing Signature;</span>
+    <img class="issuer-signature" src="" alt="Issuer Signature">
+</div>
+</div>
+
+<footer>
+Developed by <a href="https://www.linkedin.com/in/abdulfatah-katwesigye-b125a0225/" target="_blank">Abdulfatah Katwesigye</a> at Job Connect Limited
+</footer>
+
+<script>
+let staffData=[];let photoMap=new Map();let signatureDataURL='';
+// *** ULTRA-FAST RENDERING SETTING: MINIMAL SCALE FOR MAXIMUM SPEED ***
+const CARD_RENDER_SCALE = 0.25; 
+
+const formatDate=d=>{if(!d)return'date';const date=new Date(d+'T00:00:00');return date.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'})};
+function toggleLoading(s,m=""){const o=document.getElementById('loading-overlay');if(s){o.style.display='flex';o.querySelector('p:first-of-type').textContent=m||"Rendering for maximum speed. Please wait just a moment..."}else{o.style.display='none'}}
+
+const csvToArray=(str,d=",")=>{
+    const normalizedStr = str.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const lines = normalizedStr.split('\n').filter(line => line.trim() !== '');
+    if(lines.length===0)return[];
+    const headers = lines[0].split(d).map(h=>h.trim().toUpperCase());
+    const dataRows = lines.slice(1);
+    const array = dataRows.map(row=>{
+        const values = row.split(d).map(v=>v.trim());
+        if(values.length!==headers.length) {
+            console.warn("Skipping row due to incorrect column count:", row);
+            return null;
+        }
+        const el = headers.reduce((o,h,i)=>{o[h]=values[i];return o},{})
+        if((!el['NAME'] || el['NAME'].trim()==='') && (!el['ID NUMBER'] || el['ID NUMBER'].trim()==='')) {
+            return null;
+        }
+        return el;
+    }).filter(e=>e!==null);
+    return array;
+};
+
+function handleCsvUpload(e){const f=e.target.files[0];if(f){if(f.name.toLowerCase().endsWith('.xlsx'))alert("You have selected an Excel file (.xlsx). The system requires this file to be saved as a **CSV (Comma Separated Values)** file first. Please convert and re-upload the CSV version.");
+const r=new FileReader();r.onload=e=>{staffData=csvToArray(e.target.result);checkStatus();alert(`${staffData.length} staff records loaded from data file (expecting CSV format).`)};r.readAsText(f)}}
+function handlePhotosUpload(e){const f=e.target.files;photoMap.clear();for(const file of f){const r=new FileReader();r.onload=e=>{photoMap.set(file.name,e.target.result);checkStatus()};r.readAsDataURL(file)}alert(`${f.length} photos loaded.`)}
+function handleSignatureUpload(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=e=>{signatureDataURL=e.target.result;checkStatus()};r.readAsDataURL(f)}}
+
+// Debug function to check if critical assets are loaded
+function checkStatus() {
+    let statusMessage = "Generator Status: Ready.";
+    if (staffData.length === 0) {
+        statusMessage = "Generator Status: Waiting for Staff Data (CSV).";
+    } else if (signatureDataURL === '') {
+        statusMessage = "Generator Status: Waiting for Authorizing Signature.";
+    } else if (photoMap.size === 0) {
+        statusMessage = `Generator Status: Loaded ${staffData.length} records, but no Employee Photos loaded.`;
+    }
+    console.log(statusMessage);
+}
+
+
+// Function to populate ALL visual preview cards (at thumbnail size)
+function generatePreview(){
+    toggleLoading(true,"Preparing data and generating all card previews...");
+    
+    document.getElementById('downloadPdf').style.display='none';
+    document.getElementById('downloadZip').style.display='none';
+    document.getElementById('downloadPng').style.display='none';
+
+    // *** INSTANT PREVIEW RENDERING ***
+    setTimeout(()=>{
+        const outputDiv=document.getElementById('id-preview-output');
+        outputDiv.innerHTML = ''; 
+
+        if(staffData.length===0){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the CSV staff data first.</p>';toggleLoading(false);return}
+        if(signatureDataURL===''){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the Authorizing Signature first.</p>';toggleLoading(false);return}
+        
+        const iD=document.getElementById('dateOfIssue').value;
+        const eD=document.getElementById('dateOfExpiry').value;
+        
+        staffData.forEach((s) => {
+            const staffName = s['NAME'] || 'STAFF NAME MISSING';
+            const position = s['POSITION'] || 'POSITION MISSING';
+            const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+            const photoFile = s['PHOTO FILENAME'];
+
+            // Use simple placeholder SVG for speed if photo not found
+            const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">NO PHOTO</text></svg>`;
+            
+            const c=document.createElement('div');
+            c.className='id-card';
+            c.setAttribute('data-id',idNumber);
+            
+            // Replicating the miniaturized template structure (LOCKED IN)
+            c.innerHTML=`
+            <div class="id-header">
+                <div class="logo-container">
+                    <img src="jcl_logo.png" alt="Logo" class="id-logo">
+                    <p>M & L</p>
+                </div>
+                <div class="id-title">STAFF ID CARD</div>
+                <div class="id-divider"></div>
+            </div>
+            <div class="id-body">
+                <div class="photo-area"><img class="staff-photo" src="${pS}" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;"></div>
+                <div class="info-area">
+                    <h4>${staffName.toUpperCase()}</h4>
+                    <p class="position-text">${position.toUpperCase()}</p>
+                    <p class="id-number-text">${idNumber.toUpperCase()}</p>
+                    <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value">${formatDate(iD)}</span></div>
+                    <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value">${formatDate(eD)}</span></div>
+                </div>
+            </div>
+            <div class="signature-area">
+                <span class="signature-label">Authorizing Signature;</span>
+                <img class="issuer-signature" src="${signatureDataURL}" alt="Issuer Signature">
+            </div>`;
+            
+            outputDiv.appendChild(c);
+        });
+        
+        if (staffData.length > 0) {
+            document.getElementById('downloadPdf').style.display='inline-block';
+            document.getElementById('downloadPng').style.display='inline-block';
+            document.getElementById('downloadZip').style.display='inline-block';
+        }
+
+        toggleLoading(false);
+    },50);
+}
+
+// Function to render card to canvas (used for downloads)
+async function renderCardToCanvas(s, iD, eD) {
+    const template = document.getElementById('id-card-template');
+    
+    const staffName = s['NAME'] || 'STAFF NAME MISSING';
+    const position = s['POSITION'] || 'POSITION MISSING';
+    const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+    const photoFile = s['PHOTO FILENAME'];
+
+    const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">PHOTO MISSING</text></svg>`;
+    
+    // Populate the HD template elements
+    template.querySelector('h4').textContent = staffName.toUpperCase();
+    template.querySelector('.position-text').textContent = position.toUpperCase();
+    template.querySelector('.id-number-text').textContent = idNumber.toUpperCase();
+    
+    const dateRows = template.querySelectorAll('.date-row');
+    dateRows[0].querySelector('.date-value').textContent = formatDate(iD); 
+    dateRows[1].querySelector('.date-value').textContent = formatDate(eD); 
+
+    template.querySelector('.staff-photo').src = pS;
+    template.querySelector('.issuer-signature').src = signatureDataURL;
+    
+    template.setAttribute('data-id', idNumber);
+
+    // ** ULTRA-FAST RENDERING SETTINGS (LOCKED IN SPEED PRIORITY) **
+    const canvas = await html2canvas(template, {
+        scale: CARD_RENDER_SCALE, 
+        backgroundColor: '#FFFFFF',
+        useCORS: true,
+        logging: false, 
+        imageTimeout: 0, 
+    });
+    
+    return canvas.toDataURL('image/png');
+}
+
+// >>>>>> PDF Generation (LOCKED IN) <<<<<<
+async function downloadPdf(){
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+    
+    const {jsPDF} = window.jspdf;
+    const d = new jsPDF('l','mm','a4',false); 
+    d.setProperties({title:'Job Connect ID Batch Print',author:'ID Generator'});
+    
+    // PDF Metrics for 3x3 layout (9 cards per page)
+    const pW=297; const pH=210; 
+    const tIW=85.6; const tIH=54; 
+    const numCols=3; const numRows=3; 
+    const mX=(pW-(numCols*tIW))/(numCols+1); 
+    const mY=(pH-(numRows*tIH))/(numRows+1);
+    
+    let x=mX; let y=mY; let cOP=0;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    const totalCards = staffData.length;
+    toggleLoading(true, `Starting ultra-fast PDF render of ${totalCards} cards...`);
+    const startTime = Date.now();
+
+    for(let i=0; i < totalCards; i++){
+        const staff = staffData[i];
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering card ${i + 1} of ${totalCards} for PDF (Ultra-Fast Mode)...`;
+
+        const imageData = await renderCardToCanvas(staff, iD, eD);
+
+        if(cOP === 9){ 
+            d.addPage('a4','l');
+            cOP=0
+        } 
+        
+        const col = cOP % numCols; 
+        const row = Math.floor(cOP / numCols);
+        
+        x = mX + (col * (tIW + mX));
+        y = mY + (row * (tIH + mY));
+        
+        d.addImage(imageData,'PNG',x,y,tIW,tIH,`card-${i}`);
+        cOP++;
+    }
+    
+    d.save('JobConnect_ID_Batch_Print.pdf');
+    const duration = (Date.now() - startTime) / 1000;
+    
+    toggleLoading(false);
+    alert(`PDF generation complete! Total time: ${duration.toFixed(2)}s.`);
+}
+
+// >>>>>> DIRECT PNG Generation (LOCKED IN) <<<<<<
+async function downloadIndividualPngs() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast PNG export of ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        // Use FileSaver.js to trigger direct download
+        const blob = await fetch(dataURL).then(res => res.blob());
+        saveAs(blob, `${cardName}_ID_${cardId}.png`);
+    }
+
+    const duration = (Date.now() - startTime) / 1000;
+    toggleLoading(false);
+    alert(`Individual PNG export complete! Total time: ${duration.toFixed(2)}s. Downloads should have started for all ${totalCards} images.`);
+}
+
+
+// >>>>>> ZIP Generation (LOCKED IN) <<<<<<
+async function downloadZip() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const zip = new JSZip();
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast ZIP archive preparation for ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        const base64Data = dataURL.split(',')[1];
+        
+        zip.file(`${cardName}_ID_${cardId}.png`, base64Data, { base64: true });
+    }
+
+    document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+        `Compressing files into ZIP...`;
+
+    zip.generateAsync({ type: "blob" })
+        .then(function (content) {
+            saveAs(content, "JobConnect_Individual_ID_Cards.zip");
+            const duration = (Date.now() - startTime) / 1000;
+            toggleLoading(false);
+            alert(`ZIP file generation complete! Total time: ${duration.toFixed(2)}s.`);
+        })
+        .catch(err => {
+            console.error(err);
+            toggleLoading(false);
+            alert("Error generating ZIP file.");
+        });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    // Run an initial status check
+    checkStatus(); 
+
+    document.getElementById('csvFileUpload').addEventListener('change',handleCsvUpload);
+    document.getElementById('employeePhotosUpload').addEventListener('change',handlePhotosUpload);
+    document.getElementById('issuerSignatureUpload').addEventListener('change',handleSignatureUpload);
+    document.getElementById('generateBatch').addEventListener('click',generatePreview); 
+    document.getElementById('downloadPdf').addEventListener('click',downloadPdf);
+    document.getElementById('downloadZip').addEventListener('click',downloadZip);
+    document.getElementById('downloadPng').addEventListener('click',downloadIndividualPngs);
+
+    // Initially hide the download buttons
+    document.getElementById('downloadPdf').style.display = 'none';
+    document.getElementById('downloadPng').style.display = 'none';
+    document.getElementById('downloadZip').style.display = 'none';
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Connect Limited ID Generator - Ultra-Fast Speed Priority</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Montserrat:wght@700;800&display=swap');
+</style>
+
+<style>
+/* --- Interface Styling (Clean, Modern, and Compact) --- */
+:root{
+    /* Colors based on template analysis (LOCKED IN) */
+    --jcl-green: #007F4F; 
+    --jcl-dark-green: #005F3B; 
+    --text-dark: #1A1A1A;
+    --text-light: #555555;
+    --bg-white: #FFFFFF;
+    --bg-light: #F0F2F5; 
+    --border-subtle: #DEDEDE; 
+    --divider-grey: #5F5F5F; /* Locked-in Grey from template breakdown */
+    --shadow-subtle: 0 5px 15px rgba(0,0,0,.08); 
+    --shadow-card: 0 1px 4px rgba(0,0,0,.06);
+}
+/* Base Styles */
+body{
+    font-family:'Open Sans',sans-serif;
+    background-color:var(--bg-light);
+    color:var(--text-dark);
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    line-height: 1.5; 
+    font-size: 0.95em; 
+}
+header{
+    background-color:var(--bg-white);
+    padding:15px 30px; 
+    display:flex;
+    align-items:center;
+    border-bottom:4px solid var(--jcl-green);
+    box-shadow:0 3px 8px rgba(0,0,0,.04);
+}
+.header-logo{height:35px;margin-right:15px}
+h1{
+    margin:0;
+    font-size:1.5em; 
+    font-weight:800;
+    color:var(--jcl-dark-green);
+    font-family:'Montserrat',sans-serif;
+}
+
+/* Main Layout */
+main{
+    display:flex;
+    padding:30px; 
+    gap:30px;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    flex-grow:1;
+}
+#input-section{
+    flex:0 0 350px; 
+    background-color:var(--bg-white);
+    padding:25px; 
+    border-radius:10px;
+    box-shadow:var(--shadow-subtle);
+    position:sticky;
+    top:30px; 
+}
+#output-section{
+    flex:1; 
+    min-width:350px;
+    padding: 10px;
+}
+
+/* Input/Header Styling */
+h2{color:var(--jcl-green);font-size:1.4em;font-weight:700;margin-top:0;padding-bottom:12px;margin-bottom:20px;border-bottom:1px solid var(--border-subtle);}
+.input-step-header{font-weight:700;color:var(--jcl-dark-green);font-size:1.0em;margin-bottom:8px;padding: 10px 12px;background-color: rgba(0, 127, 79, 0.06);border-left: 4px solid var(--jcl-green);border-radius: 5px;font-family:'Montserrat',sans-serif;}
+.input-group{margin-bottom:20px;} 
+label{display:block;margin-bottom:6px;font-weight:700;font-size:0.95em;color:var(--text-dark);}
+input[type="file"], input[type="date"]{width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:6px;box-sizing:border-box;font-family:'Open Sans',sans-serif;font-size: 0.95em;}
+small{color:var(--text-light);font-size:.8em;}
+button{padding:12px 20px;border:none;border-radius:6px;cursor:pointer;font-size:0.95em;font-weight:700;margin-top:10px;margin-right:10px;box-shadow:0 2px 4px rgba(0,0,0,.1);font-family:'Montserrat',sans-serif;transition: background-color 0.2s, transform 0.2s;}
+button:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(0,0,0,.15);}
+#generateBatch{background-color:var(--jcl-green);color:var(--bg-white);}
+#generateBatch:hover{background-color:var(--jcl-dark-green);}
+#downloadPdf{background-color:#007BFF; color:var(--bg-white);display: none;}
+#downloadPng{background-color:#E91E63; color:var(--bg-white);display: none;}
+#downloadZip{background-color:#F58025; color:var(--bg-white);display: none;} 
+#button-container{margin-top:20px;padding-top:15px;border-top:1px solid var(--border-subtle);}
+#button-container h3{font-size: 1.1em;font-family: 'Montserrat', sans-serif;margin-top: 20px;margin-bottom: 5px;color: var(--text-dark);}
+
+
+/* Output Area */
+#output-section h2{border-bottom: none;padding-bottom: 0;margin-bottom: 5px;color: var(--text-dark);}
+#id-preview-output {
+    /* Vertical stacking and proper spacing for clarity */
+    display:flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    min-height:180px;
+    padding:15px;
+    background-color:var(--bg-white);
+    border-radius:10px;
+    box-shadow:inset 0 0 8px rgba(0,0,0,.04);
+}
+#output-section p{font-size: 0.9em;}
+
+
+/* --- ID PREVIEW CARD (Thumbnail) - MINIATURIZED, but using the exact structure --- */
+.id-card{
+    width: 350px; 
+    height: 120px; 
+    background-color: var(--bg-white);
+    border: 3px solid var(--divider-grey); 
+    border-radius: 15px; 
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; 
+    position: relative;
+    font-family:'Open Sans',sans-serif;
+    overflow: hidden;
+    font-size: 0.6em; 
+    box-shadow: var(--shadow-card);
+}
+.id-card .id-header{text-align:center;padding-top: 0;} 
+.id-card .id-logo{height: 15px; width: auto; margin-bottom: 2px;} 
+.id-card .id-header p{font-size:0.5em; margin: 0;}
+.id-card .id-title{
+    color:var(--jcl-green);font-family:'Montserrat',sans-serif;
+    font-size:0.9em;font-weight:700;margin:4px 0 1px 0;
+}
+.id-card .id-divider{width: 90%;height: 1px;background-color: var(--border-subtle);margin: 2px auto 6px auto;}
+.id-card .id-body{display:flex;gap:15px;padding-top:2px;margin-left: 5px; flex-grow: 1;}
+.id-card .photo-area{
+    width: 50px;height: 50px;border: 2px solid var(--text-dark);
+    border-radius: 6px; 
+}
+.id-card .info-area{flex: 1;}
+.id-card .info-area h4{font-size:1.0em;margin:0 0 1px 0;font-weight:700;color:var(--text-dark);}
+.id-card .info-area .position-text{color:var(--jcl-green);font-weight:600;margin:0 0 1px 0; font-size:.85em;}
+.id-card .info-area .id-number-text{color:var(--text-dark);font-weight:400;margin:0 0 4px 0; font-size:.75em;}
+.id-card .date-row{margin:1px 0;font-size:.75em;color: var(--jcl-green); line-height: 1.1;}
+.id-card .date-label{font-weight:700;}
+.id-card .date-value{font-weight:400;color:var(--text-dark);margin-left: 3px;}
+
+.id-card .signature-area{
+    position: absolute;bottom: 5px; right: 10px;display:flex;
+    align-items: flex-end;text-align: right;
+}
+.id-card .signature-label{
+    font-size:.75em; color:var(--jcl-green);font-weight:600; 
+    margin-right: 5px;margin-bottom: -3px;
+}
+.id-card .issuer-signature{max-height:10px;max-width:35px;}
+
+
+/* --- HIDDEN TEMPLATE STYLE (PIXEL-PERFECT TECHNICAL SPEC) - LOCKED IN DESIGN --- */
+#id-card-template {
+    position: absolute; left: -5000px; top: -5000px;
+    /* 1. GENERAL CARD DIMENSIONS */
+    width: 856px; height: 540px; 
+    box-sizing: border-box;
+    /* 2. OUTER BORDER */
+    padding: 25px; /* Inner Content Margin: 25 px */
+    background-color: var(--bg-white);
+    border: 8px solid var(--divider-grey); /* Border Thickness: 8px, Color: #5F5F5F */
+    border-radius: 30px; /* Corner Radius: 30 px */
+    font-family:'Open Sans',sans-serif; font-size: 1em; 
+    display: flex; flex-direction: column; overflow: hidden; 
+}
+/* 3. TOP SECTION (LOGO AREA) */
+#id-card-template .id-header {text-align: center;padding-top: 5px;margin-bottom: 0;}
+#id-card-template .id-logo {height: 65px;width: 190px;margin-bottom: 20px;} 
+#id-card-template .id-header p {font-size: 24px;font-weight: 300;margin-top: -15px;} 
+
+/* 4. TITLE BAR */
+#id-card-template .id-title {
+    color: var(--jcl-green); 
+    font-family:'Montserrat',sans-serif; 
+    font-size: 36px; 
+    font-weight: 700; 
+    margin: 0 auto;
+}
+#id-card-template .id-divider{
+    width: 90%;
+    height: 2px; 
+    background-color: var(--divider-grey); 
+    margin: 20px auto 30px auto; 
+}
+
+/* 5. MAIN CONTENT AREA (2-COLUMN LAYOUT) */
+#id-card-template .id-body {display: flex;gap: 50px;padding-top: 0;flex-grow: 1; margin-left: 30px;} 
+/* Left Column — Photo Frame */
+#id-card-template .photo-area {
+    width: 260px; height: 260px; 
+    border: 4px solid var(--text-dark); 
+    border-radius: 20px; 
+}
+/* Right Column — Staff Information */
+#id-card-template .info-area h4 {font-size: 36px;margin: 0 0 0px 0;font-weight: 700; color: #000000;} 
+#id-card-template .info-area .position-text {font-size: 30px;margin: 0 0 10px 0;font-weight: 600;color: var(--jcl-green);} 
+#id-card-template .info-area .id-number-text {font-size: 28px;margin: 0 0 15px 0;font-weight: 400;color: var(--text-dark);} 
+
+/* 6. DATES SECTION */
+#id-card-template .date-row {
+    margin: 10px 0; 
+    font-size: 30px; 
+    font-weight: 700; 
+    color: var(--jcl-green);
+    line-height: 1.2;
+}
+#id-card-template .date-row .date-value {
+    font-weight: 400;
+    color: var(--text-dark); 
+    margin-left: 15px; 
+}
+
+/* 7. SIGNATURE AREA */
+#id-card-template .signature-area {
+    position: absolute; bottom: 20px; right: 30px; 
+    display: flex; align-items: flex-end; text-align: right; flex-direction: row; padding: 0;
+}
+#id-card-template .signature-label {
+    font-size: 30px; 
+    color: var(--jcl-green); 
+    font-weight: 600; 
+    margin-right: 15px;
+    margin-bottom: -10px; 
+}
+#id-card-template .issuer-signature {
+    max-height: 80px; 
+    max-width: 160px; 
+}
+
+
+/* Loading Overlay & Footer */
+#loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:1000}
+.spinner{border:8px solid #f3f3f3;border-top:8px solid var(--jcl-green);border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;margin-bottom:20px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+footer{text-align:center;padding:12px;background-color:var(--bg-white);color:var(--text-light);border-top:1px solid var(--border-subtle);margin-top:auto;font-size:.85em}
+footer a{color:var(--jcl-green);text-decoration:none;font-weight:700}
+</style>
+
+</head>
+<body>
+<div id="loading-overlay">
+<div class="spinner"></div>
+<p style="font-size: 1.1em; color: var(--jcl-green); font-weight: 500;">Rendering for maximum speed. Please wait just a moment...</p>
+</div>
+
+<header>
+    <img src="jcl_logo.png" alt="Job Connect Limited Logo" class="header-logo">
+    <h1>Job Connect Limited ID Generator</h1>
+</header>
+
+<main>
+<section id="input-section">
+<h2>🚀 Card Generation Workflow</h2>
+
+<p class="input-step-header">1. Load Staff Records</p>
+<div class="input-group">
+<label for="csvFileUpload">Staff Data File (CSV):</label>
+<input type="file" id="csvFileUpload" accept=".csv, .xlsx">
+<small>Use a clean CSV list for rapid processing.</small>
+</div>
+
+<p class="input-step-header">2. Add Visual Assets</p>
+<div class="input-group">
+<label for="employeePhotosUpload">Employee Photos (Batch):</label>
+<input type="file" id="employeePhotosUpload" accept="image/*" multiple>
+<small>Filenames must match your data list for correct assignment.</small>
+</div>
+
+<p class="input-step-header">3. Define Authorization</p>
+<div class="input-group">
+<label for="issuerSignatureUpload">Authorizing Signature:</label>
+<input type="file" id="issuerSignatureUpload" accept="image/*">
+</div>
+
+<div class="input-group" style="display: flex; gap: 15px;">
+<div style="flex: 1;">
+<label for="dateOfIssue">Date of Issue:</label>
+<input type="date" id="dateOfIssue">
+</div>
+<div style="flex: 1;">
+<label for="dateOfExpiry">Date of Expiry:</label>
+<input type="date" id="dateOfExpiry">
+</div>
+</div>
+
+<div id="button-container">
+<button id="generateBatch">✨ Generate All Previews (Instant)</button>
+<h3 style="margin-top: 20px;">Download Options:</h3>
+<button id="downloadPdf">Download Batch PDF</button>
+<button id="downloadPng">Download Individual PNG Images</button>
+<button id="downloadZip">Download ZIP Archive</button>
+</div>
+</section>
+
+<section id="output-section">
+<h2>Visual Verification</h2>
+<p style="color: var(--jcl-dark-green); margin-bottom: 15px; font-style: italic;">Verify the clean, precise template layout below before batch exporting. Previews are **vertically stacked** for clarity.</p>
+<div id="id-preview-output">
+<p style="padding: 20px; color: var(--text-light);">Upload your data and click "Generate" above to see the clean, organized ID previews here.</p>
+</div>
+</section>
+</main>
+
+<div id="id-card-template">
+<div class="id-header">
+    <div class="logo-container">
+        <img src="jcl_logo.png" alt="Logo" class="id-logo">
+        <p style="font-family: 'Open Sans', sans-serif; font-weight: 300;">Manpower & Logistics</p>
+    </div>
+    <div class="id-title">STAFF IDENTIFICATION CARD</div>
+    <div class="id-divider"></div>
+</div>
+<div class="id-body">
+    <div class="photo-area"><img class="staff-photo" src="" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;"></div>
+    <div class="info-area">
+        <h4></h4>
+        <p class="position-text"></p>
+        <p class="id-number-text"></p>
+        <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value"></span></div>
+        <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value"></span></div>
+    </div>
+</div>
+<div class="signature-area">
+    <span class="signature-label">Authorizing Signature;</span>
+    <img class="issuer-signature" src="" alt="Issuer Signature">
+</div>
+</div>
+
+<footer>
+Developed by <a href="https://www.linkedin.com/in/abdulfatah-katwesigye-b125a0225/" target="_blank">Abdulfatah Katwesigye</a> at Job Connect Limited
+</footer>
+
+<script>
+let staffData=[];let photoMap=new Map();let signatureDataURL='';
+// *** ULTRA-FAST RENDERING SETTING: MINIMAL SCALE FOR MAXIMUM SPEED ***
+const CARD_RENDER_SCALE = 0.25; 
+
+const formatDate=d=>{if(!d)return'date';const date=new Date(d+'T00:00:00');return date.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'})};
+function toggleLoading(s,m=""){const o=document.getElementById('loading-overlay');if(s){o.style.display='flex';o.querySelector('p:first-of-type').textContent=m||"Rendering for maximum speed. Please wait just a moment..."}else{o.style.display='none'}}
+
+const csvToArray=(str,d=",")=>{
+    const normalizedStr = str.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const lines = normalizedStr.split('\n').filter(line => line.trim() !== '');
+    if(lines.length===0)return[];
+    const headers = lines[0].split(d).map(h=>h.trim().toUpperCase());
+    const dataRows = lines.slice(1);
+    const array = dataRows.map(row=>{
+        const values = row.split(d).map(v=>v.trim());
+        if(values.length!==headers.length) {
+            console.warn("Skipping row due to incorrect column count:", row);
+            return null;
+        }
+        const el = headers.reduce((o,h,i)=>{o[h]=values[i];return o},{})
+        if((!el['NAME'] || el['NAME'].trim()==='') && (!el['ID NUMBER'] || el['ID NUMBER'].trim()==='')) {
+            return null;
+        }
+        return el;
+    }).filter(e=>e!==null);
+    return array;
+};
+
+function handleCsvUpload(e){const f=e.target.files[0];if(f){if(f.name.toLowerCase().endsWith('.xlsx'))alert("You have selected an Excel file (.xlsx). The system requires this file to be saved as a **CSV (Comma Separated Values)** file first. Please convert and re-upload the CSV version.");
+const r=new FileReader();r.onload=e=>{staffData=csvToArray(e.target.result);checkStatus();alert(`${staffData.length} staff records loaded from data file (expecting CSV format).`)};r.readAsText(f)}}
+function handlePhotosUpload(e){const f=e.target.files;photoMap.clear();for(const file of f){const r=new FileReader();r.onload=e=>{photoMap.set(file.name,e.target.result);checkStatus()};r.readAsDataURL(file)}alert(`${f.length} photos loaded.`)}
+function handleSignatureUpload(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=e=>{signatureDataURL=e.target.result;checkStatus()};r.readAsDataURL(f)}}
+
+// Debug function to check if critical assets are loaded
+function checkStatus() {
+    let statusMessage = "Generator Status: Ready.";
+    if (staffData.length === 0) {
+        statusMessage = "Generator Status: Waiting for Staff Data (CSV).";
+    } else if (signatureDataURL === '') {
+        statusMessage = "Generator Status: Waiting for Authorizing Signature.";
+    } else if (photoMap.size === 0) {
+        statusMessage = `Generator Status: Loaded ${staffData.length} records, but no Employee Photos loaded.`;
+    }
+    console.log(statusMessage);
+}
+
+
+// Function to populate ALL visual preview cards (at thumbnail size)
+function generatePreview(){
+    toggleLoading(true,"Preparing data and generating all card previews...");
+    
+    document.getElementById('downloadPdf').style.display='none';
+    document.getElementById('downloadZip').style.display='none';
+    document.getElementById('downloadPng').style.display='none';
+
+    // *** INSTANT PREVIEW RENDERING ***
+    setTimeout(()=>{
+        const outputDiv=document.getElementById('id-preview-output');
+        outputDiv.innerHTML = ''; 
+
+        if(staffData.length===0){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the CSV staff data first.</p>';toggleLoading(false);return}
+        if(signatureDataURL===''){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the Authorizing Signature first.</p>';toggleLoading(false);return}
+        
+        const iD=document.getElementById('dateOfIssue').value;
+        const eD=document.getElementById('dateOfExpiry').value;
+        
+        staffData.forEach((s) => {
+            const staffName = s['NAME'] || 'STAFF NAME MISSING';
+            const position = s['POSITION'] || 'POSITION MISSING';
+            const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+            const photoFile = s['PHOTO FILENAME'];
+
+            // Use simple placeholder SVG for speed if photo not found
+            const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">NO PHOTO</text></svg>`;
+            
+            const c=document.createElement('div');
+            c.className='id-card';
+            c.setAttribute('data-id',idNumber);
+            
+            // Replicating the miniaturized template structure (LOCKED IN)
+            c.innerHTML=`
+            <div class="id-header">
+                <div class="logo-container">
+                    <img src="jcl_logo.png" alt="Logo" class="id-logo">
+                    <p>M & L</p>
+                </div>
+                <div class="id-title">STAFF ID CARD</div>
+                <div class="id-divider"></div>
+            </div>
+            <div class="id-body">
+                <div class="photo-area"><img class="staff-photo" src="${pS}" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;"></div>
+                <div class="info-area">
+                    <h4>${staffName.toUpperCase()}</h4>
+                    <p class="position-text">${position.toUpperCase()}</p>
+                    <p class="id-number-text">${idNumber.toUpperCase()}</p>
+                    <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value">${formatDate(iD)}</span></div>
+                    <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value">${formatDate(eD)}</span></div>
+                </div>
+            </div>
+            <div class="signature-area">
+                <span class="signature-label">Authorizing Signature;</span>
+                <img class="issuer-signature" src="${signatureDataURL}" alt="Issuer Signature">
+            </div>`;
+            
+            outputDiv.appendChild(c);
+        });
+        
+        if (staffData.length > 0) {
+            document.getElementById('downloadPdf').style.display='inline-block';
+            document.getElementById('downloadPng').style.display='inline-block';
+            document.getElementById('downloadZip').style.display='inline-block';
+        }
+
+        toggleLoading(false);
+    },50);
+}
+
+// Function to render card to canvas (used for downloads)
+async function renderCardToCanvas(s, iD, eD) {
+    const template = document.getElementById('id-card-template');
+    
+    const staffName = s['NAME'] || 'STAFF NAME MISSING';
+    const position = s['POSITION'] || 'POSITION MISSING';
+    const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+    const photoFile = s['PHOTO FILENAME'];
+
+    const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">PHOTO MISSING</text></svg>`;
+    
+    // Populate the HD template elements
+    template.querySelector('h4').textContent = staffName.toUpperCase();
+    template.querySelector('.position-text').textContent = position.toUpperCase();
+    template.querySelector('.id-number-text').textContent = idNumber.toUpperCase();
+    
+    const dateRows = template.querySelectorAll('.date-row');
+    dateRows[0].querySelector('.date-value').textContent = formatDate(iD); 
+    dateRows[1].querySelector('.date-value').textContent = formatDate(eD); 
+
+    template.querySelector('.staff-photo').src = pS;
+    template.querySelector('.issuer-signature').src = signatureDataURL;
+    
+    template.setAttribute('data-id', idNumber);
+
+    // ** ULTRA-FAST RENDERING SETTINGS (LOCKED IN SPEED PRIORITY) **
+    const canvas = await html2canvas(template, {
+        scale: CARD_RENDER_SCALE, 
+        backgroundColor: '#FFFFFF',
+        useCORS: true,
+        logging: false, 
+        imageTimeout: 0, 
+    });
+    
+    return canvas.toDataURL('image/png');
+}
+
+// >>>>>> PDF Generation (LOCKED IN) <<<<<<
+async function downloadPdf(){
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+    
+    const {jsPDF} = window.jspdf;
+    const d = new jsPDF('l','mm','a4',false); 
+    d.setProperties({title:'Job Connect ID Batch Print',author:'ID Generator'});
+    
+    // PDF Metrics for 3x3 layout (9 cards per page)
+    const pW=297; const pH=210; 
+    const tIW=85.6; const tIH=54; 
+    const numCols=3; const numRows=3; 
+    const mX=(pW-(numCols*tIW))/(numCols+1); 
+    const mY=(pH-(numRows*tIH))/(numRows+1);
+    
+    let x=mX; let y=mY; let cOP=0;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    const totalCards = staffData.length;
+    toggleLoading(true, `Starting ultra-fast PDF render of ${totalCards} cards...`);
+    const startTime = Date.now();
+
+    for(let i=0; i < totalCards; i++){
+        const staff = staffData[i];
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering card ${i + 1} of ${totalCards} for PDF (Ultra-Fast Mode)...`;
+
+        const imageData = await renderCardToCanvas(staff, iD, eD);
+
+        if(cOP === 9){ 
+            d.addPage('a4','l');
+            cOP=0
+        } 
+        
+        const col = cOP % numCols; 
+        const row = Math.floor(cOP / numCols);
+        
+        x = mX + (col * (tIW + mX));
+        y = mY + (row * (tIH + mY));
+        
+        d.addImage(imageData,'PNG',x,y,tIW,tIH,`card-${i}`);
+        cOP++;
+    }
+    
+    d.save('JobConnect_ID_Batch_Print.pdf');
+    const duration = (Date.now() - startTime) / 1000;
+    
+    toggleLoading(false);
+    alert(`PDF generation complete! Total time: ${duration.toFixed(2)}s.`);
+}
+
+// >>>>>> DIRECT PNG Generation (LOCKED IN) <<<<<<
+async function downloadIndividualPngs() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast PNG export of ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        // Use FileSaver.js to trigger direct download
+        const blob = await fetch(dataURL).then(res => res.blob());
+        saveAs(blob, `${cardName}_ID_${cardId}.png`);
+    }
+
+    const duration = (Date.now() - startTime) / 1000;
+    toggleLoading(false);
+    alert(`Individual PNG export complete! Total time: ${duration.toFixed(2)}s. Downloads should have started for all ${totalCards} images.`);
+}
+
+
+// >>>>>> ZIP Generation (LOCKED IN) <<<<<<
+async function downloadZip() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const zip = new JSZip();
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast ZIP archive preparation for ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        const base64Data = dataURL.split(',')[1];
+        
+        zip.file(`${cardName}_ID_${cardId}.png`, base64Data, { base64: true });
+    }
+
+    document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+        `Compressing files into ZIP...`;
+
+    zip.generateAsync({ type: "blob" })
+        .then(function (content) {
+            saveAs(content, "JobConnect_Individual_ID_Cards.zip");
+            const duration = (Date.now() - startTime) / 1000;
+            toggleLoading(false);
+            alert(`ZIP file generation complete! Total time: ${duration.toFixed(2)}s.`);
+        })
+        .catch(err => {
+            console.error(err);
+            toggleLoading(false);
+            alert("Error generating ZIP file.");
+        });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    // Run an initial status check
+    checkStatus(); 
+
+    document.getElementById('csvFileUpload').addEventListener('change',handleCsvUpload);
+    document.getElementById('employeePhotosUpload').addEventListener('change',handlePhotosUpload);
+    document.getElementById('issuerSignatureUpload').addEventListener('change',handleSignatureUpload);
+    document.getElementById('generateBatch').addEventListener('click',generatePreview); 
+    document.getElementById('downloadPdf').addEventListener('click',downloadPdf);
+    document.getElementById('downloadZip').addEventListener('click',downloadZip);
+    document.getElementById('downloadPng').addEventListener('click',downloadIndividualPngs);
+
+    // Initially hide the download buttons
+    document.getElementById('downloadPdf').style.display = 'none';
+    document.getElementById('downloadPng').style.display = 'none';
+    document.getElementById('downloadZip').style.display = 'none';
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Connect Limited ID Generator - Ultra-Fast Speed Priority</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Montserrat:wght@700;800&display=swap');
+</style>
+
+<style>
+/* --- Interface Styling (Clean, Modern, and Compact) --- */
+:root{
+    /* Colors based on template analysis (LOCKED IN) */
+    --jcl-green: #007F4F; 
+    --jcl-dark-green: #005F3B; 
+    --text-dark: #1A1A1A;
+    --text-light: #555555;
+    --bg-white: #FFFFFF;
+    --bg-light: #F0F2F5; 
+    --border-subtle: #DEDEDE; 
+    --divider-grey: #5F5F5F; /* Locked-in Grey from template breakdown */
+    --shadow-subtle: 0 5px 15px rgba(0,0,0,.08); 
+    --shadow-card: 0 1px 4px rgba(0,0,0,.06);
+}
+/* Base Styles */
+body{
+    font-family:'Open Sans',sans-serif;
+    background-color:var(--bg-light);
+    color:var(--text-dark);
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    line-height: 1.5; 
+    font-size: 0.95em; 
+}
+header{
+    background-color:var(--bg-white);
+    padding:15px 30px; 
+    display:flex;
+    align-items:center;
+    border-bottom:4px solid var(--jcl-green);
+    box-shadow:0 3px 8px rgba(0,0,0,.04);
+}
+.header-logo{height:35px;margin-right:15px}
+h1{
+    margin:0;
+    font-size:1.5em; 
+    font-weight:800;
+    color:var(--jcl-dark-green);
+    font-family:'Montserrat',sans-serif;
+}
+
+/* Main Layout */
+main{
+    display:flex;
+    padding:30px; 
+    gap:30px;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    flex-grow:1;
+}
+#input-section{
+    flex:0 0 350px; 
+    background-color:var(--bg-white);
+    padding:25px; 
+    border-radius:10px;
+    box-shadow:var(--shadow-subtle);
+    position:sticky;
+    top:30px; 
+}
+#output-section{
+    flex:1; 
+    min-width:350px;
+    padding: 10px;
+}
+
+/* Input/Header Styling */
+h2{color:var(--jcl-green);font-size:1.4em;font-weight:700;margin-top:0;padding-bottom:12px;margin-bottom:20px;border-bottom:1px solid var(--border-subtle);}
+.input-step-header{font-weight:700;color:var(--jcl-dark-green);font-size:1.0em;margin-bottom:8px;padding: 10px 12px;background-color: rgba(0, 127, 79, 0.06);border-left: 4px solid var(--jcl-green);border-radius: 5px;font-family:'Montserrat',sans-serif;}
+.input-group{margin-bottom:20px;} 
+label{display:block;margin-bottom:6px;font-weight:700;font-size:0.95em;color:var(--text-dark);}
+input[type="file"], input[type="date"]{width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:6px;box-sizing:border-box;font-family:'Open Sans',sans-serif;font-size: 0.95em;}
+small{color:var(--text-light);font-size:.8em;}
+button{padding:12px 20px;border:none;border-radius:6px;cursor:pointer;font-size:0.95em;font-weight:700;margin-top:10px;margin-right:10px;box-shadow:0 2px 4px rgba(0,0,0,.1);font-family:'Montserrat',sans-serif;transition: background-color 0.2s, transform 0.2s;}
+button:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(0,0,0,.15);}
+#generateBatch{background-color:var(--jcl-green);color:var(--bg-white);}
+#generateBatch:hover{background-color:var(--jcl-dark-green);}
+#downloadPdf{background-color:#007BFF; color:var(--bg-white);display: none;}
+#downloadPng{background-color:#E91E63; color:var(--bg-white);display: none;}
+#downloadZip{background-color:#F58025; color:var(--bg-white);display: none;} 
+#button-container{margin-top:20px;padding-top:15px;border-top:1px solid var(--border-subtle);}
+#button-container h3{font-size: 1.1em;font-family: 'Montserrat', sans-serif;margin-top: 20px;margin-bottom: 5px;color: var(--text-dark);}
+
+
+/* Output Area */
+#output-section h2{border-bottom: none;padding-bottom: 0;margin-bottom: 5px;color: var(--text-dark);}
+#id-preview-output {
+    /* Vertical stacking and proper spacing for clarity */
+    display:flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    min-height:180px;
+    padding:15px;
+    background-color:var(--bg-white);
+    border-radius:10px;
+    box-shadow:inset 0 0 8px rgba(0,0,0,.04);
+}
+#output-section p{font-size: 0.9em;}
+
+
+/* --- ID PREVIEW CARD (Thumbnail) - MINIATURIZED, but using the exact structure --- */
+.id-card{
+    width: 350px; 
+    height: 120px; 
+    background-color: var(--bg-white);
+    border: 3px solid var(--divider-grey); 
+    border-radius: 15px; 
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; 
+    position: relative;
+    font-family:'Open Sans',sans-serif;
+    overflow: hidden;
+    font-size: 0.6em; 
+    box-shadow: var(--shadow-card);
+}
+.id-card .id-header{text-align:center;padding-top: 0;} 
+.id-card .id-logo{height: 15px; width: auto; margin-bottom: 2px;} 
+.id-card .id-header p{font-size:0.5em; margin: 0;}
+.id-card .id-title{
+    color:var(--jcl-green);font-family:'Montserrat',sans-serif;
+    font-size:0.9em;font-weight:700;margin:4px 0 1px 0;
+}
+.id-card .id-divider{width: 90%;height: 1px;background-color: var(--border-subtle);margin: 2px auto 6px auto;}
+.id-card .id-body{display:flex;gap:15px;padding-top:2px;margin-left: 5px; flex-grow: 1;}
+.id-card .photo-area{
+    width: 50px;height: 50px;border: 2px solid var(--text-dark);
+    border-radius: 6px; 
+}
+.id-card .info-area{flex: 1;}
+.id-card .info-area h4{font-size:1.0em;margin:0 0 1px 0;font-weight:700;color:var(--text-dark);}
+.id-card .info-area .position-text{color:var(--jcl-green);font-weight:600;margin:0 0 1px 0; font-size:.85em;}
+.id-card .info-area .id-number-text{color:var(--text-dark);font-weight:400;margin:0 0 4px 0; font-size:.75em;}
+.id-card .date-row{margin:1px 0;font-size:.75em;color: var(--jcl-green); line-height: 1.1;}
+.id-card .date-label{font-weight:700;}
+.id-card .date-value{font-weight:400;color:var(--text-dark);margin-left: 3px;}
+
+.id-card .signature-area{
+    position: absolute;bottom: 5px; right: 10px;display:flex;
+    align-items: flex-end;text-align: right;
+}
+.id-card .signature-label{
+    font-size:.75em; color:var(--jcl-green);font-weight:600; 
+    margin-right: 5px;margin-bottom: -3px;
+}
+.id-card .issuer-signature{max-height:10px;max-width:35px;}
+
+
+/* --- HIDDEN TEMPLATE STYLE (PIXEL-PERFECT TECHNICAL SPEC) - LOCKED IN DESIGN --- */
+#id-card-template {
+    position: absolute; left: -5000px; top: -5000px;
+    /* 1. GENERAL CARD DIMENSIONS */
+    width: 856px; height: 540px; 
+    box-sizing: border-box;
+    /* 2. OUTER BORDER */
+    padding: 25px; /* Inner Content Margin: 25 px */
+    background-color: var(--bg-white);
+    border: 8px solid var(--divider-grey); /* Border Thickness: 8px, Color: #5F5F5F */
+    border-radius: 30px; /* Corner Radius: 30 px */
+    font-family:'Open Sans',sans-serif; font-size: 1em; 
+    display: flex; flex-direction: column; overflow: hidden; 
+}
+/* 3. TOP SECTION (LOGO AREA) */
+#id-card-template .id-header {text-align: center;padding-top: 5px;margin-bottom: 0;}
+#id-card-template .id-logo {height: 65px;width: 190px;margin-bottom: 20px;} 
+#id-card-template .id-header p {font-size: 24px;font-weight: 300;margin-top: -15px;} 
+
+/* 4. TITLE BAR */
+#id-card-template .id-title {
+    color: var(--jcl-green); 
+    font-family:'Montserrat',sans-serif; 
+    font-size: 36px; 
+    font-weight: 700; 
+    margin: 0 auto;
+}
+#id-card-template .id-divider{
+    width: 90%;
+    height: 2px; 
+    background-color: var(--divider-grey); 
+    margin: 20px auto 30px auto; 
+}
+
+/* 5. MAIN CONTENT AREA (2-COLUMN LAYOUT) */
+#id-card-template .id-body {display: flex;gap: 50px;padding-top: 0;flex-grow: 1; margin-left: 30px;} 
+/* Left Column — Photo Frame */
+#id-card-template .photo-area {
+    width: 260px; height: 260px; 
+    border: 4px solid var(--text-dark); 
+    border-radius: 20px; 
+}
+/* Right Column — Staff Information */
+#id-card-template .info-area h4 {font-size: 36px;margin: 0 0 0px 0;font-weight: 700; color: #000000;} 
+#id-card-template .info-area .position-text {font-size: 30px;margin: 0 0 10px 0;font-weight: 600;color: var(--jcl-green);} 
+#id-card-template .info-area .id-number-text {font-size: 28px;margin: 0 0 15px 0;font-weight: 400;color: var(--text-dark);} 
+
+/* 6. DATES SECTION */
+#id-card-template .date-row {
+    margin: 10px 0; 
+    font-size: 30px; 
+    font-weight: 700; 
+    color: var(--jcl-green);
+    line-height: 1.2;
+}
+#id-card-template .date-row .date-value {
+    font-weight: 400;
+    color: var(--text-dark); 
+    margin-left: 15px; 
+}
+
+/* 7. SIGNATURE AREA */
+#id-card-template .signature-area {
+    position: absolute; bottom: 20px; right: 30px; 
+    display: flex; align-items: flex-end; text-align: right; flex-direction: row; padding: 0;
+}
+#id-card-template .signature-label {
+    font-size: 30px; 
+    color: var(--jcl-green); 
+    font-weight: 600; 
+    margin-right: 15px;
+    margin-bottom: -10px; 
+}
+#id-card-template .issuer-signature {
+    max-height: 80px; 
+    max-width: 160px; 
+}
+
+
+/* Loading Overlay & Footer */
+#loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:1000}
+.spinner{border:8px solid #f3f3f3;border-top:8px solid var(--jcl-green);border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;margin-bottom:20px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+footer{text-align:center;padding:12px;background-color:var(--bg-white);color:var(--text-light);border-top:1px solid var(--border-subtle);margin-top:auto;font-size:.85em}
+footer a{color:var(--jcl-green);text-decoration:none;font-weight:700}
+</style>
+
+</head>
+<body>
+<div id="loading-overlay">
+<div class="spinner"></div>
+<p style="font-size: 1.1em; color: var(--jcl-green); font-weight: 500;">Rendering for maximum speed. Please wait just a moment...</p>
+</div>
+
+<header>
+    <img src="jcl_logo.png" alt="Job Connect Limited Logo" class="header-logo">
+    <h1>Job Connect Limited ID Generator</h1>
+</header>
+
+<main>
+<section id="input-section">
+<h2>🚀 Card Generation Workflow</h2>
+
+<p class="input-step-header">1. Load Staff Records</p>
+<div class="input-group">
+<label for="csvFileUpload">Staff Data File (CSV):</label>
+<input type="file" id="csvFileUpload" accept=".csv, .xlsx">
+<small>Use a clean CSV list for rapid processing.</small>
+</div>
+
+<p class="input-step-header">2. Add Visual Assets</p>
+<div class="input-group">
+<label for="employeePhotosUpload">Employee Photos (Batch):</label>
+<input type="file" id="employeePhotosUpload" accept="image/*" multiple>
+<small>Filenames must match your data list for correct assignment.</small>
+</div>
+
+<p class="input-step-header">3. Define Authorization</p>
+<div class="input-group">
+<label for="issuerSignatureUpload">Authorizing Signature:</label>
+<input type="file" id="issuerSignatureUpload" accept="image/*">
+</div>
+
+<div class="input-group" style="display: flex; gap: 15px;">
+<div style="flex: 1;">
+<label for="dateOfIssue">Date of Issue:</label>
+<input type="date" id="dateOfIssue">
+</div>
+<div style="flex: 1;">
+<label for="dateOfExpiry">Date of Expiry:</label>
+<input type="date" id="dateOfExpiry">
+</div>
+</div>
+
+<div id="button-container">
+<button id="generateBatch">✨ Generate All Previews (Instant)</button>
+<h3 style="margin-top: 20px;">Download Options:</h3>
+<button id="downloadPdf">Download Batch PDF</button>
+<button id="downloadPng">Download Individual PNG Images</button>
+<button id="downloadZip">Download ZIP Archive</button>
+</div>
+</section>
+
+<section id="output-section">
+<h2>Visual Verification</h2>
+<p style="color: var(--jcl-dark-green); margin-bottom: 15px; font-style: italic;">Verify the clean, precise template layout below before batch exporting. Previews are **vertically stacked** for clarity.</p>
+<div id="id-preview-output">
+<p style="padding: 20px; color: var(--text-light);">Upload your data and click "Generate" above to see the clean, organized ID previews here.</p>
+</div>
+</section>
+</main>
+
+<div id="id-card-template">
+<div class="id-header">
+    <div class="logo-container">
+        <img src="jcl_logo.png" alt="Logo" class="id-logo">
+        <p style="font-family: 'Open Sans', sans-serif; font-weight: 300;">Manpower & Logistics</p>
+    </div>
+    <div class="id-title">STAFF IDENTIFICATION CARD</div>
+    <div class="id-divider"></div>
+</div>
+<div class="id-body">
+    <div class="photo-area"><img class="staff-photo" src="" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;"></div>
+    <div class="info-area">
+        <h4></h4>
+        <p class="position-text"></p>
+        <p class="id-number-text"></p>
+        <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value"></span></div>
+        <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value"></span></div>
+    </div>
+</div>
+<div class="signature-area">
+    <span class="signature-label">Authorizing Signature;</span>
+    <img class="issuer-signature" src="" alt="Issuer Signature">
+</div>
+</div>
+
+<footer>
+Developed by <a href="https://www.linkedin.com/in/abdulfatah-katwesigye-b125a0225/" target="_blank">Abdulfatah Katwesigye</a> at Job Connect Limited
+</footer>
+
+<script>
+let staffData=[];let photoMap=new Map();let signatureDataURL='';
+// *** ULTRA-FAST RENDERING SETTING: MINIMAL SCALE FOR MAXIMUM SPEED ***
+const CARD_RENDER_SCALE = 0.25; 
+
+const formatDate=d=>{if(!d)return'date';const date=new Date(d+'T00:00:00');return date.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'})};
+function toggleLoading(s,m=""){const o=document.getElementById('loading-overlay');if(s){o.style.display='flex';o.querySelector('p:first-of-type').textContent=m||"Rendering for maximum speed. Please wait just a moment..."}else{o.style.display='none'}}
+
+const csvToArray=(str,d=",")=>{
+    const normalizedStr = str.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const lines = normalizedStr.split('\n').filter(line => line.trim() !== '');
+    if(lines.length===0)return[];
+    const headers = lines[0].split(d).map(h=>h.trim().toUpperCase());
+    const dataRows = lines.slice(1);
+    const array = dataRows.map(row=>{
+        const values = row.split(d).map(v=>v.trim());
+        if(values.length!==headers.length) {
+            console.warn("Skipping row due to incorrect column count:", row);
+            return null;
+        }
+        const el = headers.reduce((o,h,i)=>{o[h]=values[i];return o},{})
+        if((!el['NAME'] || el['NAME'].trim()==='') && (!el['ID NUMBER'] || el['ID NUMBER'].trim()==='')) {
+            return null;
+        }
+        return el;
+    }).filter(e=>e!==null);
+    return array;
+};
+
+function handleCsvUpload(e){const f=e.target.files[0];if(f){if(f.name.toLowerCase().endsWith('.xlsx'))alert("You have selected an Excel file (.xlsx). The system requires this file to be saved as a **CSV (Comma Separated Values)** file first. Please convert and re-upload the CSV version.");
+const r=new FileReader();r.onload=e=>{staffData=csvToArray(e.target.result);checkStatus();alert(`${staffData.length} staff records loaded from data file (expecting CSV format).`)};r.readAsText(f)}}
+function handlePhotosUpload(e){const f=e.target.files;photoMap.clear();for(const file of f){const r=new FileReader();r.onload=e=>{photoMap.set(file.name,e.target.result);checkStatus()};r.readAsDataURL(file)}alert(`${f.length} photos loaded.`)}
+function handleSignatureUpload(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=e=>{signatureDataURL=e.target.result;checkStatus()};r.readAsDataURL(f)}}
+
+// Debug function to check if critical assets are loaded
+function checkStatus() {
+    let statusMessage = "Generator Status: Ready.";
+    if (staffData.length === 0) {
+        statusMessage = "Generator Status: Waiting for Staff Data (CSV).";
+    } else if (signatureDataURL === '') {
+        statusMessage = "Generator Status: Waiting for Authorizing Signature.";
+    } else if (photoMap.size === 0) {
+        statusMessage = `Generator Status: Loaded ${staffData.length} records, but no Employee Photos loaded.`;
+    }
+    console.log(statusMessage);
+}
+
+
+// Function to populate ALL visual preview cards (at thumbnail size)
+function generatePreview(){
+    toggleLoading(true,"Preparing data and generating all card previews...");
+    
+    document.getElementById('downloadPdf').style.display='none';
+    document.getElementById('downloadZip').style.display='none';
+    document.getElementById('downloadPng').style.display='none';
+
+    // *** INSTANT PREVIEW RENDERING ***
+    setTimeout(()=>{
+        const outputDiv=document.getElementById('id-preview-output');
+        outputDiv.innerHTML = ''; 
+
+        if(staffData.length===0){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the CSV staff data first.</p>';toggleLoading(false);return}
+        if(signatureDataURL===''){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the Authorizing Signature first.</p>';toggleLoading(false);return}
+        
+        const iD=document.getElementById('dateOfIssue').value;
+        const eD=document.getElementById('dateOfExpiry').value;
+        
+        staffData.forEach((s) => {
+            const staffName = s['NAME'] || 'STAFF NAME MISSING';
+            const position = s['POSITION'] || 'POSITION MISSING';
+            const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+            const photoFile = s['PHOTO FILENAME'];
+
+            // Use simple placeholder SVG for speed if photo not found
+            const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">NO PHOTO</text></svg>`;
+            
+            const c=document.createElement('div');
+            c.className='id-card';
+            c.setAttribute('data-id',idNumber);
+            
+            // Replicating the miniaturized template structure (LOCKED IN)
+            c.innerHTML=`
+            <div class="id-header">
+                <div class="logo-container">
+                    <img src="jcl_logo.png" alt="Logo" class="id-logo">
+                    <p>M & L</p>
+                </div>
+                <div class="id-title">STAFF ID CARD</div>
+                <div class="id-divider"></div>
+            </div>
+            <div class="id-body">
+                <div class="photo-area"><img class="staff-photo" src="${pS}" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;"></div>
+                <div class="info-area">
+                    <h4>${staffName.toUpperCase()}</h4>
+                    <p class="position-text">${position.toUpperCase()}</p>
+                    <p class="id-number-text">${idNumber.toUpperCase()}</p>
+                    <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value">${formatDate(iD)}</span></div>
+                    <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value">${formatDate(eD)}</span></div>
+                </div>
+            </div>
+            <div class="signature-area">
+                <span class="signature-label">Authorizing Signature;</span>
+                <img class="issuer-signature" src="${signatureDataURL}" alt="Issuer Signature">
+            </div>`;
+            
+            outputDiv.appendChild(c);
+        });
+        
+        if (staffData.length > 0) {
+            document.getElementById('downloadPdf').style.display='inline-block';
+            document.getElementById('downloadPng').style.display='inline-block';
+            document.getElementById('downloadZip').style.display='inline-block';
+        }
+
+        toggleLoading(false);
+    },50);
+}
+
+// Function to render card to canvas (used for downloads)
+async function renderCardToCanvas(s, iD, eD) {
+    const template = document.getElementById('id-card-template');
+    
+    const staffName = s['NAME'] || 'STAFF NAME MISSING';
+    const position = s['POSITION'] || 'POSITION MISSING';
+    const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+    const photoFile = s['PHOTO FILENAME'];
+
+    const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">PHOTO MISSING</text></svg>`;
+    
+    // Populate the HD template elements
+    template.querySelector('h4').textContent = staffName.toUpperCase();
+    template.querySelector('.position-text').textContent = position.toUpperCase();
+    template.querySelector('.id-number-text').textContent = idNumber.toUpperCase();
+    
+    const dateRows = template.querySelectorAll('.date-row');
+    dateRows[0].querySelector('.date-value').textContent = formatDate(iD); 
+    dateRows[1].querySelector('.date-value').textContent = formatDate(eD); 
+
+    template.querySelector('.staff-photo').src = pS;
+    template.querySelector('.issuer-signature').src = signatureDataURL;
+    
+    template.setAttribute('data-id', idNumber);
+
+    // ** ULTRA-FAST RENDERING SETTINGS (LOCKED IN SPEED PRIORITY) **
+    const canvas = await html2canvas(template, {
+        scale: CARD_RENDER_SCALE, 
+        backgroundColor: '#FFFFFF',
+        useCORS: true,
+        logging: false, 
+        imageTimeout: 0, 
+    });
+    
+    return canvas.toDataURL('image/png');
+}
+
+// >>>>>> PDF Generation (LOCKED IN) <<<<<<
+async function downloadPdf(){
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+    
+    const {jsPDF} = window.jspdf;
+    const d = new jsPDF('l','mm','a4',false); 
+    d.setProperties({title:'Job Connect ID Batch Print',author:'ID Generator'});
+    
+    // PDF Metrics for 3x3 layout (9 cards per page)
+    const pW=297; const pH=210; 
+    const tIW=85.6; const tIH=54; 
+    const numCols=3; const numRows=3; 
+    const mX=(pW-(numCols*tIW))/(numCols+1); 
+    const mY=(pH-(numRows*tIH))/(numRows+1);
+    
+    let x=mX; let y=mY; let cOP=0;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    const totalCards = staffData.length;
+    toggleLoading(true, `Starting ultra-fast PDF render of ${totalCards} cards...`);
+    const startTime = Date.now();
+
+    for(let i=0; i < totalCards; i++){
+        const staff = staffData[i];
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering card ${i + 1} of ${totalCards} for PDF (Ultra-Fast Mode)...`;
+
+        const imageData = await renderCardToCanvas(staff, iD, eD);
+
+        if(cOP === 9){ 
+            d.addPage('a4','l');
+            cOP=0
+        } 
+        
+        const col = cOP % numCols; 
+        const row = Math.floor(cOP / numCols);
+        
+        x = mX + (col * (tIW + mX));
+        y = mY + (row * (tIH + mY));
+        
+        d.addImage(imageData,'PNG',x,y,tIW,tIH,`card-${i}`);
+        cOP++;
+    }
+    
+    d.save('JobConnect_ID_Batch_Print.pdf');
+    const duration = (Date.now() - startTime) / 1000;
+    
+    toggleLoading(false);
+    alert(`PDF generation complete! Total time: ${duration.toFixed(2)}s.`);
+}
+
+// >>>>>> DIRECT PNG Generation (LOCKED IN) <<<<<<
+async function downloadIndividualPngs() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast PNG export of ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        // Use FileSaver.js to trigger direct download
+        const blob = await fetch(dataURL).then(res => res.blob());
+        saveAs(blob, `${cardName}_ID_${cardId}.png`);
+    }
+
+    const duration = (Date.now() - startTime) / 1000;
+    toggleLoading(false);
+    alert(`Individual PNG export complete! Total time: ${duration.toFixed(2)}s. Downloads should have started for all ${totalCards} images.`);
+}
+
+
+// >>>>>> ZIP Generation (LOCKED IN) <<<<<<
+async function downloadZip() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const zip = new JSZip();
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast ZIP archive preparation for ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        const base64Data = dataURL.split(',')[1];
+        
+        zip.file(`${cardName}_ID_${cardId}.png`, base64Data, { base64: true });
+    }
+
+    document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+        `Compressing files into ZIP...`;
+
+    zip.generateAsync({ type: "blob" })
+        .then(function (content) {
+            saveAs(content, "JobConnect_Individual_ID_Cards.zip");
+            const duration = (Date.now() - startTime) / 1000;
+            toggleLoading(false);
+            alert(`ZIP file generation complete! Total time: ${duration.toFixed(2)}s.`);
+        })
+        .catch(err => {
+            console.error(err);
+            toggleLoading(false);
+            alert("Error generating ZIP file.");
+        });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    // Run an initial status check
+    checkStatus(); 
+
+    document.getElementById('csvFileUpload').addEventListener('change',handleCsvUpload);
+    document.getElementById('employeePhotosUpload').addEventListener('change',handlePhotosUpload);
+    document.getElementById('issuerSignatureUpload').addEventListener('change',handleSignatureUpload);
+    document.getElementById('generateBatch').addEventListener('click',generatePreview); 
+    document.getElementById('downloadPdf').addEventListener('click',downloadPdf);
+    document.getElementById('downloadZip').addEventListener('click',downloadZip);
+    document.getElementById('downloadPng').addEventListener('click',downloadIndividualPngs);
+
+    // Initially hide the download buttons
+    document.getElementById('downloadPdf').style.display = 'none';
+    document.getElementById('downloadPng').style.display = 'none';
+    document.getElementById('downloadZip').style.display = 'none';
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Connect Limited ID Generator - Ultra-Fast Speed Priority</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Montserrat:wght@700;800&display=swap');
+</style>
+
+<style>
+/* --- Interface Styling (Clean, Modern, and Compact) --- */
+:root{
+    /* Colors based on template analysis (LOCKED IN) */
+    --jcl-green: #007F4F; 
+    --jcl-dark-green: #005F3B; 
+    --text-dark: #1A1A1A;
+    --text-light: #555555;
+    --bg-white: #FFFFFF;
+    --bg-light: #F0F2F5; 
+    --border-subtle: #DEDEDE; 
+    --divider-grey: #5F5F5F; /* Locked-in Grey from template breakdown */
+    --shadow-subtle: 0 5px 15px rgba(0,0,0,.08); 
+    --shadow-card: 0 1px 4px rgba(0,0,0,.06);
+}
+/* Base Styles */
+body{
+    font-family:'Open Sans',sans-serif;
+    background-color:var(--bg-light);
+    color:var(--text-dark);
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    line-height: 1.5; 
+    font-size: 0.95em; 
+}
+header{
+    background-color:var(--bg-white);
+    padding:15px 30px; 
+    display:flex;
+    align-items:center;
+    border-bottom:4px solid var(--jcl-green);
+    box-shadow:0 3px 8px rgba(0,0,0,.04);
+}
+.header-logo{height:35px;margin-right:15px}
+h1{
+    margin:0;
+    font-size:1.5em; 
+    font-weight:800;
+    color:var(--jcl-dark-green);
+    font-family:'Montserrat',sans-serif;
+}
+
+/* Main Layout */
+main{
+    display:flex;
+    padding:30px; 
+    gap:30px;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    flex-grow:1;
+}
+#input-section{
+    flex:0 0 350px; 
+    background-color:var(--bg-white);
+    padding:25px; 
+    border-radius:10px;
+    box-shadow:var(--shadow-subtle);
+    position:sticky;
+    top:30px; 
+}
+#output-section{
+    flex:1; 
+    min-width:350px;
+    padding: 10px;
+}
+
+/* Input/Header Styling */
+h2{color:var(--jcl-green);font-size:1.4em;font-weight:700;margin-top:0;padding-bottom:12px;margin-bottom:20px;border-bottom:1px solid var(--border-subtle);}
+.input-step-header{font-weight:700;color:var(--jcl-dark-green);font-size:1.0em;margin-bottom:8px;padding: 10px 12px;background-color: rgba(0, 127, 79, 0.06);border-left: 4px solid var(--jcl-green);border-radius: 5px;font-family:'Montserrat',sans-serif;}
+.input-group{margin-bottom:20px;} 
+label{display:block;margin-bottom:6px;font-weight:700;font-size:0.95em;color:var(--text-dark);}
+input[type="file"], input[type="date"]{width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:6px;box-sizing:border-box;font-family:'Open Sans',sans-serif;font-size: 0.95em;}
+small{color:var(--text-light);font-size:.8em;}
+button{padding:12px 20px;border:none;border-radius:6px;cursor:pointer;font-size:0.95em;font-weight:700;margin-top:10px;margin-right:10px;box-shadow:0 2px 4px rgba(0,0,0,.1);font-family:'Montserrat',sans-serif;transition: background-color 0.2s, transform 0.2s;}
+button:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(0,0,0,.15);}
+#generateBatch{background-color:var(--jcl-green);color:var(--bg-white);}
+#generateBatch:hover{background-color:var(--jcl-dark-green);}
+#downloadPdf{background-color:#007BFF; color:var(--bg-white);display: none;}
+#downloadPng{background-color:#E91E63; color:var(--bg-white);display: none;}
+#downloadZip{background-color:#F58025; color:var(--bg-white);display: none;} 
+#button-container{margin-top:20px;padding-top:15px;border-top:1px solid var(--border-subtle);}
+#button-container h3{font-size: 1.1em;font-family: 'Montserrat', sans-serif;margin-top: 20px;margin-bottom: 5px;color: var(--text-dark);}
+
+
+/* Output Area */
+#output-section h2{border-bottom: none;padding-bottom: 0;margin-bottom: 5px;color: var(--text-dark);}
+#id-preview-output {
+    /* Vertical stacking and proper spacing for clarity */
+    display:flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    min-height:180px;
+    padding:15px;
+    background-color:var(--bg-white);
+    border-radius:10px;
+    box-shadow:inset 0 0 8px rgba(0,0,0,.04);
+}
+#output-section p{font-size: 0.9em;}
+
+
+/* --- ID PREVIEW CARD (Thumbnail) - MINIATURIZED, but using the exact structure --- */
+.id-card{
+    width: 350px; 
+    height: 120px; 
+    background-color: var(--bg-white);
+    border: 3px solid var(--divider-grey); 
+    border-radius: 15px; 
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; 
+    position: relative;
+    font-family:'Open Sans',sans-serif;
+    overflow: hidden;
+    font-size: 0.6em; 
+    box-shadow: var(--shadow-card);
+}
+.id-card .id-header{text-align:center;padding-top: 0;} 
+.id-card .id-logo{height: 15px; width: auto; margin-bottom: 2px;} 
+.id-card .id-header p{font-size:0.5em; margin: 0;}
+.id-card .id-title{
+    color:var(--jcl-green);font-family:'Montserrat',sans-serif;
+    font-size:0.9em;font-weight:700;margin:4px 0 1px 0;
+}
+.id-card .id-divider{width: 90%;height: 1px;background-color: var(--border-subtle);margin: 2px auto 6px auto;}
+.id-card .id-body{display:flex;gap:15px;padding-top:2px;margin-left: 5px; flex-grow: 1;}
+.id-card .photo-area{
+    width: 50px;height: 50px;border: 2px solid var(--text-dark);
+    border-radius: 6px; 
+}
+.id-card .info-area{flex: 1;}
+.id-card .info-area h4{font-size:1.0em;margin:0 0 1px 0;font-weight:700;color:var(--text-dark);}
+.id-card .info-area .position-text{color:var(--jcl-green);font-weight:600;margin:0 0 1px 0; font-size:.85em;}
+.id-card .info-area .id-number-text{color:var(--text-dark);font-weight:400;margin:0 0 4px 0; font-size:.75em;}
+.id-card .date-row{margin:1px 0;font-size:.75em;color: var(--jcl-green); line-height: 1.1;}
+.id-card .date-label{font-weight:700;}
+.id-card .date-value{font-weight:400;color:var(--text-dark);margin-left: 3px;}
+
+.id-card .signature-area{
+    position: absolute;bottom: 5px; right: 10px;display:flex;
+    align-items: flex-end;text-align: right;
+}
+.id-card .signature-label{
+    font-size:.75em; color:var(--jcl-green);font-weight:600; 
+    margin-right: 5px;margin-bottom: -3px;
+}
+.id-card .issuer-signature{max-height:10px;max-width:35px;}
+
+
+/* --- HIDDEN TEMPLATE STYLE (PIXEL-PERFECT TECHNICAL SPEC) - LOCKED IN DESIGN --- */
+#id-card-template {
+    position: absolute; left: -5000px; top: -5000px;
+    /* 1. GENERAL CARD DIMENSIONS */
+    width: 856px; height: 540px; 
+    box-sizing: border-box;
+    /* 2. OUTER BORDER */
+    padding: 25px; /* Inner Content Margin: 25 px */
+    background-color: var(--bg-white);
+    border: 8px solid var(--divider-grey); /* Border Thickness: 8px, Color: #5F5F5F */
+    border-radius: 30px; /* Corner Radius: 30 px */
+    font-family:'Open Sans',sans-serif; font-size: 1em; 
+    display: flex; flex-direction: column; overflow: hidden; 
+}
+/* 3. TOP SECTION (LOGO AREA) */
+#id-card-template .id-header {text-align: center;padding-top: 5px;margin-bottom: 0;}
+#id-card-template .id-logo {height: 65px;width: 190px;margin-bottom: 20px;} 
+#id-card-template .id-header p {font-size: 24px;font-weight: 300;margin-top: -15px;} 
+
+/* 4. TITLE BAR */
+#id-card-template .id-title {
+    color: var(--jcl-green); 
+    font-family:'Montserrat',sans-serif; 
+    font-size: 36px; 
+    font-weight: 700; 
+    margin: 0 auto;
+}
+#id-card-template .id-divider{
+    width: 90%;
+    height: 2px; 
+    background-color: var(--divider-grey); 
+    margin: 20px auto 30px auto; 
+}
+
+/* 5. MAIN CONTENT AREA (2-COLUMN LAYOUT) */
+#id-card-template .id-body {display: flex;gap: 50px;padding-top: 0;flex-grow: 1; margin-left: 30px;} 
+/* Left Column — Photo Frame */
+#id-card-template .photo-area {
+    width: 260px; height: 260px; 
+    border: 4px solid var(--text-dark); 
+    border-radius: 20px; 
+}
+/* Right Column — Staff Information */
+#id-card-template .info-area h4 {font-size: 36px;margin: 0 0 0px 0;font-weight: 700; color: #000000;} 
+#id-card-template .info-area .position-text {font-size: 30px;margin: 0 0 10px 0;font-weight: 600;color: var(--jcl-green);} 
+#id-card-template .info-area .id-number-text {font-size: 28px;margin: 0 0 15px 0;font-weight: 400;color: var(--text-dark);} 
+
+/* 6. DATES SECTION */
+#id-card-template .date-row {
+    margin: 10px 0; 
+    font-size: 30px; 
+    font-weight: 700; 
+    color: var(--jcl-green);
+    line-height: 1.2;
+}
+#id-card-template .date-row .date-value {
+    font-weight: 400;
+    color: var(--text-dark); 
+    margin-left: 15px; 
+}
+
+/* 7. SIGNATURE AREA */
+#id-card-template .signature-area {
+    position: absolute; bottom: 20px; right: 30px; 
+    display: flex; align-items: flex-end; text-align: right; flex-direction: row; padding: 0;
+}
+#id-card-template .signature-label {
+    font-size: 30px; 
+    color: var(--jcl-green); 
+    font-weight: 600; 
+    margin-right: 15px;
+    margin-bottom: -10px; 
+}
+#id-card-template .issuer-signature {
+    max-height: 80px; 
+    max-width: 160px; 
+}
+
+
+/* Loading Overlay & Footer */
+#loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:1000}
+.spinner{border:8px solid #f3f3f3;border-top:8px solid var(--jcl-green);border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;margin-bottom:20px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+footer{text-align:center;padding:12px;background-color:var(--bg-white);color:var(--text-light);border-top:1px solid var(--border-subtle);margin-top:auto;font-size:.85em}
+footer a{color:var(--jcl-green);text-decoration:none;font-weight:700}
+</style>
+
+</head>
+<body>
+<div id="loading-overlay">
+<div class="spinner"></div>
+<p style="font-size: 1.1em; color: var(--jcl-green); font-weight: 500;">Rendering for maximum speed. Please wait just a moment...</p>
+</div>
+
+<header>
+    <img src="jcl_logo.png" alt="Job Connect Limited Logo" class="header-logo">
+    <h1>Job Connect Limited ID Generator</h1>
+</header>
+
+<main>
+<section id="input-section">
+<h2>🚀 Card Generation Workflow</h2>
+
+<p class="input-step-header">1. Load Staff Records</p>
+<div class="input-group">
+<label for="csvFileUpload">Staff Data File (CSV):</label>
+<input type="file" id="csvFileUpload" accept=".csv, .xlsx">
+<small>Use a clean CSV list for rapid processing.</small>
+</div>
+
+<p class="input-step-header">2. Add Visual Assets</p>
+<div class="input-group">
+<label for="employeePhotosUpload">Employee Photos (Batch):</label>
+<input type="file" id="employeePhotosUpload" accept="image/*" multiple>
+<small>Filenames must match your data list for correct assignment.</small>
+</div>
+
+<p class="input-step-header">3. Define Authorization</p>
+<div class="input-group">
+<label for="issuerSignatureUpload">Authorizing Signature:</label>
+<input type="file" id="issuerSignatureUpload" accept="image/*">
+</div>
+
+<div class="input-group" style="display: flex; gap: 15px;">
+<div style="flex: 1;">
+<label for="dateOfIssue">Date of Issue:</label>
+<input type="date" id="dateOfIssue">
+</div>
+<div style="flex: 1;">
+<label for="dateOfExpiry">Date of Expiry:</label>
+<input type="date" id="dateOfExpiry">
+</div>
+</div>
+
+<div id="button-container">
+<button id="generateBatch">✨ Generate All Previews (Instant)</button>
+<h3 style="margin-top: 20px;">Download Options:</h3>
+<button id="downloadPdf">Download Batch PDF</button>
+<button id="downloadPng">Download Individual PNG Images</button>
+<button id="downloadZip">Download ZIP Archive</button>
+</div>
+</section>
+
+<section id="output-section">
+<h2>Visual Verification</h2>
+<p style="color: var(--jcl-dark-green); margin-bottom: 15px; font-style: italic;">Verify the clean, precise template layout below before batch exporting. Previews are **vertically stacked** for clarity.</p>
+<div id="id-preview-output">
+<p style="padding: 20px; color: var(--text-light);">Upload your data and click "Generate" above to see the clean, organized ID previews here.</p>
+</div>
+</section>
+</main>
+
+<div id="id-card-template">
+<div class="id-header">
+    <div class="logo-container">
+        <img src="jcl_logo.png" alt="Logo" class="id-logo">
+        <p style="font-family: 'Open Sans', sans-serif; font-weight: 300;">Manpower & Logistics</p>
+    </div>
+    <div class="id-title">STAFF IDENTIFICATION CARD</div>
+    <div class="id-divider"></div>
+</div>
+<div class="id-body">
+    <div class="photo-area"><img class="staff-photo" src="" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;"></div>
+    <div class="info-area">
+        <h4></h4>
+        <p class="position-text"></p>
+        <p class="id-number-text"></p>
+        <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value"></span></div>
+        <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value"></span></div>
+    </div>
+</div>
+<div class="signature-area">
+    <span class="signature-label">Authorizing Signature;</span>
+    <img class="issuer-signature" src="" alt="Issuer Signature">
+</div>
+</div>
+
+<footer>
+Developed by <a href="https://www.linkedin.com/in/abdulfatah-katwesigye-b125a0225/" target="_blank">Abdulfatah Katwesigye</a> at Job Connect Limited
+</footer>
+
+<script>
+let staffData=[];let photoMap=new Map();let signatureDataURL='';
+// *** ULTRA-FAST RENDERING SETTING: MINIMAL SCALE FOR MAXIMUM SPEED ***
+const CARD_RENDER_SCALE = 0.25; 
+
+const formatDate=d=>{if(!d)return'date';const date=new Date(d+'T00:00:00');return date.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'})};
+function toggleLoading(s,m=""){const o=document.getElementById('loading-overlay');if(s){o.style.display='flex';o.querySelector('p:first-of-type').textContent=m||"Rendering for maximum speed. Please wait just a moment..."}else{o.style.display='none'}}
+
+const csvToArray=(str,d=",")=>{
+    const normalizedStr = str.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const lines = normalizedStr.split('\n').filter(line => line.trim() !== '');
+    if(lines.length===0)return[];
+    const headers = lines[0].split(d).map(h=>h.trim().toUpperCase());
+    const dataRows = lines.slice(1);
+    const array = dataRows.map(row=>{
+        const values = row.split(d).map(v=>v.trim());
+        if(values.length!==headers.length) {
+            console.warn("Skipping row due to incorrect column count:", row);
+            return null;
+        }
+        const el = headers.reduce((o,h,i)=>{o[h]=values[i];return o},{})
+        if((!el['NAME'] || el['NAME'].trim()==='') && (!el['ID NUMBER'] || el['ID NUMBER'].trim()==='')) {
+            return null;
+        }
+        return el;
+    }).filter(e=>e!==null);
+    return array;
+};
+
+function handleCsvUpload(e){const f=e.target.files[0];if(f){if(f.name.toLowerCase().endsWith('.xlsx'))alert("You have selected an Excel file (.xlsx). The system requires this file to be saved as a **CSV (Comma Separated Values)** file first. Please convert and re-upload the CSV version.");
+const r=new FileReader();r.onload=e=>{staffData=csvToArray(e.target.result);checkStatus();alert(`${staffData.length} staff records loaded from data file (expecting CSV format).`)};r.readAsText(f)}}
+function handlePhotosUpload(e){const f=e.target.files;photoMap.clear();for(const file of f){const r=new FileReader();r.onload=e=>{photoMap.set(file.name,e.target.result);checkStatus()};r.readAsDataURL(file)}alert(`${f.length} photos loaded.`)}
+function handleSignatureUpload(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=e=>{signatureDataURL=e.target.result;checkStatus()};r.readAsDataURL(f)}}
+
+// Debug function to check if critical assets are loaded
+function checkStatus() {
+    let statusMessage = "Generator Status: Ready.";
+    if (staffData.length === 0) {
+        statusMessage = "Generator Status: Waiting for Staff Data (CSV).";
+    } else if (signatureDataURL === '') {
+        statusMessage = "Generator Status: Waiting for Authorizing Signature.";
+    } else if (photoMap.size === 0) {
+        statusMessage = `Generator Status: Loaded ${staffData.length} records, but no Employee Photos loaded.`;
+    }
+    console.log(statusMessage);
+}
+
+
+// Function to populate ALL visual preview cards (at thumbnail size)
+function generatePreview(){
+    toggleLoading(true,"Preparing data and generating all card previews...");
+    
+    document.getElementById('downloadPdf').style.display='none';
+    document.getElementById('downloadZip').style.display='none';
+    document.getElementById('downloadPng').style.display='none';
+
+    // *** INSTANT PREVIEW RENDERING ***
+    setTimeout(()=>{
+        const outputDiv=document.getElementById('id-preview-output');
+        outputDiv.innerHTML = ''; 
+
+        if(staffData.length===0){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the CSV staff data first.</p>';toggleLoading(false);return}
+        if(signatureDataURL===''){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the Authorizing Signature first.</p>';toggleLoading(false);return}
+        
+        const iD=document.getElementById('dateOfIssue').value;
+        const eD=document.getElementById('dateOfExpiry').value;
+        
+        staffData.forEach((s) => {
+            const staffName = s['NAME'] || 'STAFF NAME MISSING';
+            const position = s['POSITION'] || 'POSITION MISSING';
+            const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+            const photoFile = s['PHOTO FILENAME'];
+
+            // Use simple placeholder SVG for speed if photo not found
+            const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">NO PHOTO</text></svg>`;
+            
+            const c=document.createElement('div');
+            c.className='id-card';
+            c.setAttribute('data-id',idNumber);
+            
+            // Replicating the miniaturized template structure (LOCKED IN)
+            c.innerHTML=`
+            <div class="id-header">
+                <div class="logo-container">
+                    <img src="jcl_logo.png" alt="Logo" class="id-logo">
+                    <p>M & L</p>
+                </div>
+                <div class="id-title">STAFF ID CARD</div>
+                <div class="id-divider"></div>
+            </div>
+            <div class="id-body">
+                <div class="photo-area"><img class="staff-photo" src="${pS}" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;"></div>
+                <div class="info-area">
+                    <h4>${staffName.toUpperCase()}</h4>
+                    <p class="position-text">${position.toUpperCase()}</p>
+                    <p class="id-number-text">${idNumber.toUpperCase()}</p>
+                    <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value">${formatDate(iD)}</span></div>
+                    <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value">${formatDate(eD)}</span></div>
+                </div>
+            </div>
+            <div class="signature-area">
+                <span class="signature-label">Authorizing Signature;</span>
+                <img class="issuer-signature" src="${signatureDataURL}" alt="Issuer Signature">
+            </div>`;
+            
+            outputDiv.appendChild(c);
+        });
+        
+        if (staffData.length > 0) {
+            document.getElementById('downloadPdf').style.display='inline-block';
+            document.getElementById('downloadPng').style.display='inline-block';
+            document.getElementById('downloadZip').style.display='inline-block';
+        }
+
+        toggleLoading(false);
+    },50);
+}
+
+// Function to render card to canvas (used for downloads)
+async function renderCardToCanvas(s, iD, eD) {
+    const template = document.getElementById('id-card-template');
+    
+    const staffName = s['NAME'] || 'STAFF NAME MISSING';
+    const position = s['POSITION'] || 'POSITION MISSING';
+    const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+    const photoFile = s['PHOTO FILENAME'];
+
+    const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">PHOTO MISSING</text></svg>`;
+    
+    // Populate the HD template elements
+    template.querySelector('h4').textContent = staffName.toUpperCase();
+    template.querySelector('.position-text').textContent = position.toUpperCase();
+    template.querySelector('.id-number-text').textContent = idNumber.toUpperCase();
+    
+    const dateRows = template.querySelectorAll('.date-row');
+    dateRows[0].querySelector('.date-value').textContent = formatDate(iD); 
+    dateRows[1].querySelector('.date-value').textContent = formatDate(eD); 
+
+    template.querySelector('.staff-photo').src = pS;
+    template.querySelector('.issuer-signature').src = signatureDataURL;
+    
+    template.setAttribute('data-id', idNumber);
+
+    // ** ULTRA-FAST RENDERING SETTINGS (LOCKED IN SPEED PRIORITY) **
+    const canvas = await html2canvas(template, {
+        scale: CARD_RENDER_SCALE, 
+        backgroundColor: '#FFFFFF',
+        useCORS: true,
+        logging: false, 
+        imageTimeout: 0, 
+    });
+    
+    return canvas.toDataURL('image/png');
+}
+
+// >>>>>> PDF Generation (LOCKED IN) <<<<<<
+async function downloadPdf(){
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+    
+    const {jsPDF} = window.jspdf;
+    const d = new jsPDF('l','mm','a4',false); 
+    d.setProperties({title:'Job Connect ID Batch Print',author:'ID Generator'});
+    
+    // PDF Metrics for 3x3 layout (9 cards per page)
+    const pW=297; const pH=210; 
+    const tIW=85.6; const tIH=54; 
+    const numCols=3; const numRows=3; 
+    const mX=(pW-(numCols*tIW))/(numCols+1); 
+    const mY=(pH-(numRows*tIH))/(numRows+1);
+    
+    let x=mX; let y=mY; let cOP=0;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    const totalCards = staffData.length;
+    toggleLoading(true, `Starting ultra-fast PDF render of ${totalCards} cards...`);
+    const startTime = Date.now();
+
+    for(let i=0; i < totalCards; i++){
+        const staff = staffData[i];
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering card ${i + 1} of ${totalCards} for PDF (Ultra-Fast Mode)...`;
+
+        const imageData = await renderCardToCanvas(staff, iD, eD);
+
+        if(cOP === 9){ 
+            d.addPage('a4','l');
+            cOP=0
+        } 
+        
+        const col = cOP % numCols; 
+        const row = Math.floor(cOP / numCols);
+        
+        x = mX + (col * (tIW + mX));
+        y = mY + (row * (tIH + mY));
+        
+        d.addImage(imageData,'PNG',x,y,tIW,tIH,`card-${i}`);
+        cOP++;
+    }
+    
+    d.save('JobConnect_ID_Batch_Print.pdf');
+    const duration = (Date.now() - startTime) / 1000;
+    
+    toggleLoading(false);
+    alert(`PDF generation complete! Total time: ${duration.toFixed(2)}s.`);
+}
+
+// >>>>>> DIRECT PNG Generation (LOCKED IN) <<<<<<
+async function downloadIndividualPngs() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast PNG export of ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        // Use FileSaver.js to trigger direct download
+        const blob = await fetch(dataURL).then(res => res.blob());
+        saveAs(blob, `${cardName}_ID_${cardId}.png`);
+    }
+
+    const duration = (Date.now() - startTime) / 1000;
+    toggleLoading(false);
+    alert(`Individual PNG export complete! Total time: ${duration.toFixed(2)}s. Downloads should have started for all ${totalCards} images.`);
+}
+
+
+// >>>>>> ZIP Generation (LOCKED IN) <<<<<<
+async function downloadZip() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const zip = new JSZip();
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast ZIP archive preparation for ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        const base64Data = dataURL.split(',')[1];
+        
+        zip.file(`${cardName}_ID_${cardId}.png`, base64Data, { base64: true });
+    }
+
+    document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+        `Compressing files into ZIP...`;
+
+    zip.generateAsync({ type: "blob" })
+        .then(function (content) {
+            saveAs(content, "JobConnect_Individual_ID_Cards.zip");
+            const duration = (Date.now() - startTime) / 1000;
+            toggleLoading(false);
+            alert(`ZIP file generation complete! Total time: ${duration.toFixed(2)}s.`);
+        })
+        .catch(err => {
+            console.error(err);
+            toggleLoading(false);
+            alert("Error generating ZIP file.");
+        });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    // Run an initial status check
+    checkStatus(); 
+
+    document.getElementById('csvFileUpload').addEventListener('change',handleCsvUpload);
+    document.getElementById('employeePhotosUpload').addEventListener('change',handlePhotosUpload);
+    document.getElementById('issuerSignatureUpload').addEventListener('change',handleSignatureUpload);
+    document.getElementById('generateBatch').addEventListener('click',generatePreview); 
+    document.getElementById('downloadPdf').addEventListener('click',downloadPdf);
+    document.getElementById('downloadZip').addEventListener('click',downloadZip);
+    document.getElementById('downloadPng').addEventListener('click',downloadIndividualPngs);
+
+    // Initially hide the download buttons
+    document.getElementById('downloadPdf').style.display = 'none';
+    document.getElementById('downloadPng').style.display = 'none';
+    document.getElementById('downloadZip').style.display = 'none';
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Connect Limited ID Generator - Ultra-Fast Speed Priority</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Montserrat:wght@700;800&display=swap');
+</style>
+
+<style>
+/* --- Interface Styling (Clean, Modern, and Compact) --- */
+:root{
+    /* Colors based on template analysis (LOCKED IN) */
+    --jcl-green: #007F4F; 
+    --jcl-dark-green: #005F3B; 
+    --text-dark: #1A1A1A;
+    --text-light: #555555;
+    --bg-white: #FFFFFF;
+    --bg-light: #F0F2F5; 
+    --border-subtle: #DEDEDE; 
+    --divider-grey: #5F5F5F; /* Locked-in Grey from template breakdown */
+    --shadow-subtle: 0 5px 15px rgba(0,0,0,.08); 
+    --shadow-card: 0 1px 4px rgba(0,0,0,.06);
+}
+/* Base Styles */
+body{
+    font-family:'Open Sans',sans-serif;
+    background-color:var(--bg-light);
+    color:var(--text-dark);
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    line-height: 1.5; 
+    font-size: 0.95em; 
+}
+header{
+    background-color:var(--bg-white);
+    padding:15px 30px; 
+    display:flex;
+    align-items:center;
+    border-bottom:4px solid var(--jcl-green);
+    box-shadow:0 3px 8px rgba(0,0,0,.04);
+}
+.header-logo{height:35px;margin-right:15px}
+h1{
+    margin:0;
+    font-size:1.5em; 
+    font-weight:800;
+    color:var(--jcl-dark-green);
+    font-family:'Montserrat',sans-serif;
+}
+
+/* Main Layout */
+main{
+    display:flex;
+    padding:30px; 
+    gap:30px;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    flex-grow:1;
+}
+#input-section{
+    flex:0 0 350px; 
+    background-color:var(--bg-white);
+    padding:25px; 
+    border-radius:10px;
+    box-shadow:var(--shadow-subtle);
+    position:sticky;
+    top:30px; 
+}
+#output-section{
+    flex:1; 
+    min-width:350px;
+    padding: 10px;
+}
+
+/* Input/Header Styling */
+h2{color:var(--jcl-green);font-size:1.4em;font-weight:700;margin-top:0;padding-bottom:12px;margin-bottom:20px;border-bottom:1px solid var(--border-subtle);}
+.input-step-header{font-weight:700;color:var(--jcl-dark-green);font-size:1.0em;margin-bottom:8px;padding: 10px 12px;background-color: rgba(0, 127, 79, 0.06);border-left: 4px solid var(--jcl-green);border-radius: 5px;font-family:'Montserrat',sans-serif;}
+.input-group{margin-bottom:20px;} 
+label{display:block;margin-bottom:6px;font-weight:700;font-size:0.95em;color:var(--text-dark);}
+input[type="file"], input[type="date"]{width:100%;padding:10px;border:1px solid var(--border-subtle);border-radius:6px;box-sizing:border-box;font-family:'Open Sans',sans-serif;font-size: 0.95em;}
+small{color:var(--text-light);font-size:.8em;}
+button{padding:12px 20px;border:none;border-radius:6px;cursor:pointer;font-size:0.95em;font-weight:700;margin-top:10px;margin-right:10px;box-shadow:0 2px 4px rgba(0,0,0,.1);font-family:'Montserrat',sans-serif;transition: background-color 0.2s, transform 0.2s;}
+button:hover{transform:translateY(-1px);box-shadow:0 4px 8px rgba(0,0,0,.15);}
+#generateBatch{background-color:var(--jcl-green);color:var(--bg-white);}
+#generateBatch:hover{background-color:var(--jcl-dark-green);}
+#downloadPdf{background-color:#007BFF; color:var(--bg-white);display: none;}
+#downloadPng{background-color:#E91E63; color:var(--bg-white);display: none;}
+#downloadZip{background-color:#F58025; color:var(--bg-white);display: none;} 
+#button-container{margin-top:20px;padding-top:15px;border-top:1px solid var(--border-subtle);}
+#button-container h3{font-size: 1.1em;font-family: 'Montserrat', sans-serif;margin-top: 20px;margin-bottom: 5px;color: var(--text-dark);}
+
+
+/* Output Area */
+#output-section h2{border-bottom: none;padding-bottom: 0;margin-bottom: 5px;color: var(--text-dark);}
+#id-preview-output {
+    /* Vertical stacking and proper spacing for clarity */
+    display:flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    min-height:180px;
+    padding:15px;
+    background-color:var(--bg-white);
+    border-radius:10px;
+    box-shadow:inset 0 0 8px rgba(0,0,0,.04);
+}
+#output-section p{font-size: 0.9em;}
+
+
+/* --- ID PREVIEW CARD (Thumbnail) - MINIATURIZED, but using the exact structure --- */
+.id-card{
+    width: 350px; 
+    height: 120px; 
+    background-color: var(--bg-white);
+    border: 3px solid var(--divider-grey); 
+    border-radius: 15px; 
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; 
+    position: relative;
+    font-family:'Open Sans',sans-serif;
+    overflow: hidden;
+    font-size: 0.6em; 
+    box-shadow: var(--shadow-card);
+}
+.id-card .id-header{text-align:center;padding-top: 0;} 
+.id-card .id-logo{height: 15px; width: auto; margin-bottom: 2px;} 
+.id-card .id-header p{font-size:0.5em; margin: 0;}
+.id-card .id-title{
+    color:var(--jcl-green);font-family:'Montserrat',sans-serif;
+    font-size:0.9em;font-weight:700;margin:4px 0 1px 0;
+}
+.id-card .id-divider{width: 90%;height: 1px;background-color: var(--border-subtle);margin: 2px auto 6px auto;}
+.id-card .id-body{display:flex;gap:15px;padding-top:2px;margin-left: 5px; flex-grow: 1;}
+.id-card .photo-area{
+    width: 50px;height: 50px;border: 2px solid var(--text-dark);
+    border-radius: 6px; 
+}
+.id-card .info-area{flex: 1;}
+.id-card .info-area h4{font-size:1.0em;margin:0 0 1px 0;font-weight:700;color:var(--text-dark);}
+.id-card .info-area .position-text{color:var(--jcl-green);font-weight:600;margin:0 0 1px 0; font-size:.85em;}
+.id-card .info-area .id-number-text{color:var(--text-dark);font-weight:400;margin:0 0 4px 0; font-size:.75em;}
+.id-card .date-row{margin:1px 0;font-size:.75em;color: var(--jcl-green); line-height: 1.1;}
+.id-card .date-label{font-weight:700;}
+.id-card .date-value{font-weight:400;color:var(--text-dark);margin-left: 3px;}
+
+.id-card .signature-area{
+    position: absolute;bottom: 5px; right: 10px;display:flex;
+    align-items: flex-end;text-align: right;
+}
+.id-card .signature-label{
+    font-size:.75em; color:var(--jcl-green);font-weight:600; 
+    margin-right: 5px;margin-bottom: -3px;
+}
+.id-card .issuer-signature{max-height:10px;max-width:35px;}
+
+
+/* --- HIDDEN TEMPLATE STYLE (PIXEL-PERFECT TECHNICAL SPEC) - LOCKED IN DESIGN --- */
+#id-card-template {
+    position: absolute; left: -5000px; top: -5000px;
+    /* 1. GENERAL CARD DIMENSIONS */
+    width: 856px; height: 540px; 
+    box-sizing: border-box;
+    /* 2. OUTER BORDER */
+    padding: 25px; /* Inner Content Margin: 25 px */
+    background-color: var(--bg-white);
+    border: 8px solid var(--divider-grey); /* Border Thickness: 8px, Color: #5F5F5F */
+    border-radius: 30px; /* Corner Radius: 30 px */
+    font-family:'Open Sans',sans-serif; font-size: 1em; 
+    display: flex; flex-direction: column; overflow: hidden; 
+}
+/* 3. TOP SECTION (LOGO AREA) */
+#id-card-template .id-header {text-align: center;padding-top: 5px;margin-bottom: 0;}
+#id-card-template .id-logo {height: 65px;width: 190px;margin-bottom: 20px;} 
+#id-card-template .id-header p {font-size: 24px;font-weight: 300;margin-top: -15px;} 
+
+/* 4. TITLE BAR */
+#id-card-template .id-title {
+    color: var(--jcl-green); 
+    font-family:'Montserrat',sans-serif; 
+    font-size: 36px; 
+    font-weight: 700; 
+    margin: 0 auto;
+}
+#id-card-template .id-divider{
+    width: 90%;
+    height: 2px; 
+    background-color: var(--divider-grey); 
+    margin: 20px auto 30px auto; 
+}
+
+/* 5. MAIN CONTENT AREA (2-COLUMN LAYOUT) */
+#id-card-template .id-body {display: flex;gap: 50px;padding-top: 0;flex-grow: 1; margin-left: 30px;} 
+/* Left Column — Photo Frame */
+#id-card-template .photo-area {
+    width: 260px; height: 260px; 
+    border: 4px solid var(--text-dark); 
+    border-radius: 20px; 
+}
+/* Right Column — Staff Information */
+#id-card-template .info-area h4 {font-size: 36px;margin: 0 0 0px 0;font-weight: 700; color: #000000;} 
+#id-card-template .info-area .position-text {font-size: 30px;margin: 0 0 10px 0;font-weight: 600;color: var(--jcl-green);} 
+#id-card-template .info-area .id-number-text {font-size: 28px;margin: 0 0 15px 0;font-weight: 400;color: var(--text-dark);} 
+
+/* 6. DATES SECTION */
+#id-card-template .date-row {
+    margin: 10px 0; 
+    font-size: 30px; 
+    font-weight: 700; 
+    color: var(--jcl-green);
+    line-height: 1.2;
+}
+#id-card-template .date-row .date-value {
+    font-weight: 400;
+    color: var(--text-dark); 
+    margin-left: 15px; 
+}
+
+/* 7. SIGNATURE AREA */
+#id-card-template .signature-area {
+    position: absolute; bottom: 20px; right: 30px; 
+    display: flex; align-items: flex-end; text-align: right; flex-direction: row; padding: 0;
+}
+#id-card-template .signature-label {
+    font-size: 30px; 
+    color: var(--jcl-green); 
+    font-weight: 600; 
+    margin-right: 15px;
+    margin-bottom: -10px; 
+}
+#id-card-template .issuer-signature {
+    max-height: 80px; 
+    max-width: 160px; 
+}
+
+
+/* Loading Overlay & Footer */
+#loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:1000}
+.spinner{border:8px solid #f3f3f3;border-top:8px solid var(--jcl-green);border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;margin-bottom:20px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+footer{text-align:center;padding:12px;background-color:var(--bg-white);color:var(--text-light);border-top:1px solid var(--border-subtle);margin-top:auto;font-size:.85em}
+footer a{color:var(--jcl-green);text-decoration:none;font-weight:700}
+</style>
+
+</head>
+<body>
+<div id="loading-overlay">
+<div class="spinner"></div>
+<p style="font-size: 1.1em; color: var(--jcl-green); font-weight: 500;">Rendering for maximum speed. Please wait just a moment...</p>
+</div>
+
+<header>
+    <img src="jcl_logo.png" alt="Job Connect Limited Logo" class="header-logo">
+    <h1>Job Connect Limited ID Generator</h1>
+</header>
+
+<main>
+<section id="input-section">
+<h2>🚀 Card Generation Workflow</h2>
+
+<p class="input-step-header">1. Load Staff Records</p>
+<div class="input-group">
+<label for="csvFileUpload">Staff Data File (CSV):</label>
+<input type="file" id="csvFileUpload" accept=".csv, .xlsx">
+<small>Use a clean CSV list for rapid processing.</small>
+</div>
+
+<p class="input-step-header">2. Add Visual Assets</p>
+<div class="input-group">
+<label for="employeePhotosUpload">Employee Photos (Batch):</label>
+<input type="file" id="employeePhotosUpload" accept="image/*" multiple>
+<small>Filenames must match your data list for correct assignment.</small>
+</div>
+
+<p class="input-step-header">3. Define Authorization</p>
+<div class="input-group">
+<label for="issuerSignatureUpload">Authorizing Signature:</label>
+<input type="file" id="issuerSignatureUpload" accept="image/*">
+</div>
+
+<div class="input-group" style="display: flex; gap: 15px;">
+<div style="flex: 1;">
+<label for="dateOfIssue">Date of Issue:</label>
+<input type="date" id="dateOfIssue">
+</div>
+<div style="flex: 1;">
+<label for="dateOfExpiry">Date of Expiry:</label>
+<input type="date" id="dateOfExpiry">
+</div>
+</div>
+
+<div id="button-container">
+<button id="generateBatch">✨ Generate All Previews (Instant)</button>
+<h3 style="margin-top: 20px;">Download Options:</h3>
+<button id="downloadPdf">Download Batch PDF</button>
+<button id="downloadPng">Download Individual PNG Images</button>
+<button id="downloadZip">Download ZIP Archive</button>
+</div>
+</section>
+
+<section id="output-section">
+<h2>Visual Verification</h2>
+<p style="color: var(--jcl-dark-green); margin-bottom: 15px; font-style: italic;">Verify the clean, precise template layout below before batch exporting. Previews are **vertically stacked** for clarity.</p>
+<div id="id-preview-output">
+<p style="padding: 20px; color: var(--text-light);">Upload your data and click "Generate" above to see the clean, organized ID previews here.</p>
+</div>
+</section>
+</main>
+
+<div id="id-card-template">
+<div class="id-header">
+    <div class="logo-container">
+        <img src="jcl_logo.png" alt="Logo" class="id-logo">
+        <p style="font-family: 'Open Sans', sans-serif; font-weight: 300;">Manpower & Logistics</p>
+    </div>
+    <div class="id-title">STAFF IDENTIFICATION CARD</div>
+    <div class="id-divider"></div>
+</div>
+<div class="id-body">
+    <div class="photo-area"><img class="staff-photo" src="" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;"></div>
+    <div class="info-area">
+        <h4></h4>
+        <p class="position-text"></p>
+        <p class="id-number-text"></p>
+        <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value"></span></div>
+        <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value"></span></div>
+    </div>
+</div>
+<div class="signature-area">
+    <span class="signature-label">Authorizing Signature;</span>
+    <img class="issuer-signature" src="" alt="Issuer Signature">
+</div>
+</div>
+
+<footer>
+Developed by <a href="https://www.linkedin.com/in/abdulfatah-katwesigye-b125a0225/" target="_blank">Abdulfatah Katwesigye</a> at Job Connect Limited
+</footer>
+
+<script>
+let staffData=[];let photoMap=new Map();let signatureDataURL='';
+// *** ULTRA-FAST RENDERING SETTING: MINIMAL SCALE FOR MAXIMUM SPEED ***
+const CARD_RENDER_SCALE = 0.25; 
+
+const formatDate=d=>{if(!d)return'date';const date=new Date(d+'T00:00:00');return date.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'})};
+function toggleLoading(s,m=""){const o=document.getElementById('loading-overlay');if(s){o.style.display='flex';o.querySelector('p:first-of-type').textContent=m||"Rendering for maximum speed. Please wait just a moment..."}else{o.style.display='none'}}
+
+const csvToArray=(str,d=",")=>{
+    const normalizedStr = str.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const lines = normalizedStr.split('\n').filter(line => line.trim() !== '');
+    if(lines.length===0)return[];
+    const headers = lines[0].split(d).map(h=>h.trim().toUpperCase());
+    const dataRows = lines.slice(1);
+    const array = dataRows.map(row=>{
+        const values = row.split(d).map(v=>v.trim());
+        if(values.length!==headers.length) {
+            console.warn("Skipping row due to incorrect column count:", row);
+            return null;
+        }
+        const el = headers.reduce((o,h,i)=>{o[h]=values[i];return o},{})
+        if((!el['NAME'] || el['NAME'].trim()==='') && (!el['ID NUMBER'] || el['ID NUMBER'].trim()==='')) {
+            return null;
+        }
+        return el;
+    }).filter(e=>e!==null);
+    return array;
+};
+
+function handleCsvUpload(e){const f=e.target.files[0];if(f){if(f.name.toLowerCase().endsWith('.xlsx'))alert("You have selected an Excel file (.xlsx). The system requires this file to be saved as a **CSV (Comma Separated Values)** file first. Please convert and re-upload the CSV version.");
+const r=new FileReader();r.onload=e=>{staffData=csvToArray(e.target.result);checkStatus();alert(`${staffData.length} staff records loaded from data file (expecting CSV format).`)};r.readAsText(f)}}
+function handlePhotosUpload(e){const f=e.target.files;photoMap.clear();for(const file of f){const r=new FileReader();r.onload=e=>{photoMap.set(file.name,e.target.result);checkStatus()};r.readAsDataURL(file)}alert(`${f.length} photos loaded.`)}
+function handleSignatureUpload(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=e=>{signatureDataURL=e.target.result;checkStatus()};r.readAsDataURL(f)}}
+
+// Debug function to check if critical assets are loaded
+function checkStatus() {
+    let statusMessage = "Generator Status: Ready.";
+    if (staffData.length === 0) {
+        statusMessage = "Generator Status: Waiting for Staff Data (CSV).";
+    } else if (signatureDataURL === '') {
+        statusMessage = "Generator Status: Waiting for Authorizing Signature.";
+    } else if (photoMap.size === 0) {
+        statusMessage = `Generator Status: Loaded ${staffData.length} records, but no Employee Photos loaded.`;
+    }
+    console.log(statusMessage);
+}
+
+
+// Function to populate ALL visual preview cards (at thumbnail size)
+function generatePreview(){
+    toggleLoading(true,"Preparing data and generating all card previews...");
+    
+    document.getElementById('downloadPdf').style.display='none';
+    document.getElementById('downloadZip').style.display='none';
+    document.getElementById('downloadPng').style.display='none';
+
+    // *** INSTANT PREVIEW RENDERING ***
+    setTimeout(()=>{
+        const outputDiv=document.getElementById('id-preview-output');
+        outputDiv.innerHTML = ''; 
+
+        if(staffData.length===0){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the CSV staff data first.</p>';toggleLoading(false);return}
+        if(signatureDataURL===''){outputDiv.innerHTML='<p style="padding: 20px; color: var(--text-light);">❌ Error: Please upload the Authorizing Signature first.</p>';toggleLoading(false);return}
+        
+        const iD=document.getElementById('dateOfIssue').value;
+        const eD=document.getElementById('dateOfExpiry').value;
+        
+        staffData.forEach((s) => {
+            const staffName = s['NAME'] || 'STAFF NAME MISSING';
+            const position = s['POSITION'] || 'POSITION MISSING';
+            const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+            const photoFile = s['PHOTO FILENAME'];
+
+            // Use simple placeholder SVG for speed if photo not found
+            const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">NO PHOTO</text></svg>`;
+            
+            const c=document.createElement('div');
+            c.className='id-card';
+            c.setAttribute('data-id',idNumber);
+            
+            // Replicating the miniaturized template structure (LOCKED IN)
+            c.innerHTML=`
+            <div class="id-header">
+                <div class="logo-container">
+                    <img src="jcl_logo.png" alt="Logo" class="id-logo">
+                    <p>M & L</p>
+                </div>
+                <div class="id-title">STAFF ID CARD</div>
+                <div class="id-divider"></div>
+            </div>
+            <div class="id-body">
+                <div class="photo-area"><img class="staff-photo" src="${pS}" alt="Employee Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;"></div>
+                <div class="info-area">
+                    <h4>${staffName.toUpperCase()}</h4>
+                    <p class="position-text">${position.toUpperCase()}</p>
+                    <p class="id-number-text">${idNumber.toUpperCase()}</p>
+                    <div class="date-row"><span class="date-label">Issued;</span> <span class="date-value">${formatDate(iD)}</span></div>
+                    <div class="date-row"><span class="date-label">Expires;</span> <span class="date-value">${formatDate(eD)}</span></div>
+                </div>
+            </div>
+            <div class="signature-area">
+                <span class="signature-label">Authorizing Signature;</span>
+                <img class="issuer-signature" src="${signatureDataURL}" alt="Issuer Signature">
+            </div>`;
+            
+            outputDiv.appendChild(c);
+        });
+        
+        if (staffData.length > 0) {
+            document.getElementById('downloadPdf').style.display='inline-block';
+            document.getElementById('downloadPng').style.display='inline-block';
+            document.getElementById('downloadZip').style.display='inline-block';
+        }
+
+        toggleLoading(false);
+    },50);
+}
+
+// Function to render card to canvas (used for downloads)
+async function renderCardToCanvas(s, iD, eD) {
+    const template = document.getElementById('id-card-template');
+    
+    const staffName = s['NAME'] || 'STAFF NAME MISSING';
+    const position = s['POSITION'] || 'POSITION MISSING';
+    const idNumber = s['ID NUMBER'] || 'ID NUMBER MISSING';
+    const photoFile = s['PHOTO FILENAME'];
+
+    const pS=photoMap.get(photoFile)||`data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 180"><rect width="165" height="180" fill="#f0f0f0"/><text x="82.5" y="90" font-family="Open Sans" font-size="12" font-weight="bold" fill="#666" text-anchor="middle" dominant-baseline="middle">PHOTO MISSING</text></svg>`;
+    
+    // Populate the HD template elements
+    template.querySelector('h4').textContent = staffName.toUpperCase();
+    template.querySelector('.position-text').textContent = position.toUpperCase();
+    template.querySelector('.id-number-text').textContent = idNumber.toUpperCase();
+    
+    const dateRows = template.querySelectorAll('.date-row');
+    dateRows[0].querySelector('.date-value').textContent = formatDate(iD); 
+    dateRows[1].querySelector('.date-value').textContent = formatDate(eD); 
+
+    template.querySelector('.staff-photo').src = pS;
+    template.querySelector('.issuer-signature').src = signatureDataURL;
+    
+    template.setAttribute('data-id', idNumber);
+
+    // ** ULTRA-FAST RENDERING SETTINGS (LOCKED IN SPEED PRIORITY) **
+    const canvas = await html2canvas(template, {
+        scale: CARD_RENDER_SCALE, 
+        backgroundColor: '#FFFFFF',
+        useCORS: true,
+        logging: false, 
+        imageTimeout: 0, 
+    });
+    
+    return canvas.toDataURL('image/png');
+}
+
+// >>>>>> PDF Generation (LOCKED IN) <<<<<<
+async function downloadPdf(){
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+    
+    const {jsPDF} = window.jspdf;
+    const d = new jsPDF('l','mm','a4',false); 
+    d.setProperties({title:'Job Connect ID Batch Print',author:'ID Generator'});
+    
+    // PDF Metrics for 3x3 layout (9 cards per page)
+    const pW=297; const pH=210; 
+    const tIW=85.6; const tIH=54; 
+    const numCols=3; const numRows=3; 
+    const mX=(pW-(numCols*tIW))/(numCols+1); 
+    const mY=(pH-(numRows*tIH))/(numRows+1);
+    
+    let x=mX; let y=mY; let cOP=0;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    const totalCards = staffData.length;
+    toggleLoading(true, `Starting ultra-fast PDF render of ${totalCards} cards...`);
+    const startTime = Date.now();
+
+    for(let i=0; i < totalCards; i++){
+        const staff = staffData[i];
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering card ${i + 1} of ${totalCards} for PDF (Ultra-Fast Mode)...`;
+
+        const imageData = await renderCardToCanvas(staff, iD, eD);
+
+        if(cOP === 9){ 
+            d.addPage('a4','l');
+            cOP=0
+        } 
+        
+        const col = cOP % numCols; 
+        const row = Math.floor(cOP / numCols);
+        
+        x = mX + (col * (tIW + mX));
+        y = mY + (row * (tIH + mY));
+        
+        d.addImage(imageData,'PNG',x,y,tIW,tIH,`card-${i}`);
+        cOP++;
+    }
+    
+    d.save('JobConnect_ID_Batch_Print.pdf');
+    const duration = (Date.now() - startTime) / 1000;
+    
+    toggleLoading(false);
+    alert(`PDF generation complete! Total time: ${duration.toFixed(2)}s.`);
+}
+
+// >>>>>> DIRECT PNG Generation (LOCKED IN) <<<<<<
+async function downloadIndividualPngs() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast PNG export of ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        // Use FileSaver.js to trigger direct download
+        const blob = await fetch(dataURL).then(res => res.blob());
+        saveAs(blob, `${cardName}_ID_${cardId}.png`);
+    }
+
+    const duration = (Date.now() - startTime) / 1000;
+    toggleLoading(false);
+    alert(`Individual PNG export complete! Total time: ${duration.toFixed(2)}s. Downloads should have started for all ${totalCards} images.`);
+}
+
+
+// >>>>>> ZIP Generation (LOCKED IN) <<<<<<
+async function downloadZip() {
+    if(staffData.length === 0){alert("No staff data loaded.");return}
+    if(signatureDataURL===''){alert("Please upload the Authorizing Signature first.");return}
+
+    const zip = new JSZip();
+    const totalCards = staffData.length;
+    
+    const iD=document.getElementById('dateOfIssue').value;
+    const eD=document.getElementById('dateOfExpiry').value;
+    
+    toggleLoading(true, `Starting ultra-fast ZIP archive preparation for ${totalCards} images...`);
+    const startTime = Date.now();
+
+    for (let i = 0; i < totalCards; i++) {
+        const staff = staffData[i];
+        const cardId = staff['ID NUMBER'] || `Card_${i+1}`;
+        const cardName = staff['NAME'] ? staff['NAME'].replace(/[^a-zA-Z0-9]/g, '_') : cardId;
+        
+        document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+            `Rendering PNG for ${cardName} (${i + 1} of ${totalCards}) - Ultra-Fast Mode...`;
+
+        const dataURL = await renderCardToCanvas(staff, iD, eD);
+        
+        const base64Data = dataURL.split(',')[1];
+        
+        zip.file(`${cardName}_ID_${cardId}.png`, base64Data, { base64: true });
+    }
+
+    document.getElementById('loading-overlay').querySelector('p:first-of-type').textContent = 
+        `Compressing files into ZIP...`;
+
+    zip.generateAsync({ type: "blob" })
+        .then(function (content) {
+            saveAs(content, "JobConnect_Individual_ID_Cards.zip");
+            const duration = (Date.now() - startTime) / 1000;
+            toggleLoading(false);
+            alert(`ZIP file generation complete! Total time: ${duration.toFixed(2)}s.`);
+        })
+        .catch(err => {
+            console.error(err);
+            toggleLoading(false);
+            alert("Error generating ZIP file.");
+        });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    // Run an initial status check
+    checkStatus(); 
+
+    document.getElementById('csvFileUpload').addEventListener('change',handleCsvUpload);
+    document.getElementById('employeePhotosUpload').addEventListener('change',handlePhotosUpload);
+    document.getElementById('issuerSignatureUpload').addEventListener('change',handleSignatureUpload);
+    document.getElementById('generateBatch').addEventListener('click',generatePreview); 
+    document.getElementById('downloadPdf').addEventListener('click',downloadPdf);
+    document.getElementById('downloadZip').addEventListener('click',downloadZip);
+    document.getElementById('downloadPng').addEventListener('click',downloadIndividualPngs);
+
+    // Initially hide the download buttons
+    document.getElementById('downloadPdf').style.display = 'none';
+    document.getElementById('downloadPng').style.display = 'none';
+    document.getElementById('downloadZip').style.display = 'none';
+});
+</script>
+</body>
+</html>
